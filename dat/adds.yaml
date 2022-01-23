@@ -1,0 +1,23 @@
+- type: randomize
+  cardinality: 1
+  adjustments:
+    Sardines: 1
+    Smoked Sardines: 1
+    Mackerel: 1
+- adjustments:
+    Eggs: 1
+- adjustments:
+    Tuna: 1
+- adjustments:
+    String Cheese: 1
+- adjustments:
+    Extra Virgin Olive Oil: .5
+- adjustments:
+    Pumpkin Seeds: 5
+- adjustments:
+    Macadamia Nuts: 5
+- type: randomize
+  select: 1
+  adjustments:
+    Broccoli: 10
+    Cauliflower: 10
