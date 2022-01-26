@@ -510,7 +510,7 @@ function parse(args) {
 
         .option('-w, --weight <weight>', 'Weight (lbs)')
         .option('-f, --body-fat <body-fat>', 'Body fat percentage')
-        .option('-b, --calories_burned <calories_burned>', 'Calories burned beyond BMR per day')
+        .option('-b, --calories-burned <calories-burned>', 'Calories burned beyond BMR per day')
 
         .option('-C, --chicken [grams]', 'Chicken')
         .option('-S, --salmon [grams]', 'Salmon')
@@ -579,12 +579,13 @@ $ node health -w 175 -f 20 -b 500 -C 250 -s
     }
 
     if (options.caloriesBurned) {
+        p4(options);
         options.calories_burned = parseInt(options.caloriesBurned);
         delete options.caloriesBurned;
     }
 
     if (options.bodyFat) {
-        options.body_fat_pct = options.bodyFat;
+        options.body_fat_pct = parseFloat(options.bodyFat);
         delete options.bodyFat;
     }
 
@@ -596,6 +597,8 @@ $ node health -w 175 -f 20 -b 500 -C 250 -s
     delete options.salmon;
     delete options.beef;
     delete options.porkChop;
+
+    p4(options);
 
     return options;
 }

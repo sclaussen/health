@@ -2,38 +2,38 @@ profile:
   sex: male
   height: 72
   birthdate: 1967-09-27
-  weight: 194.3
-  body_fat_pct: 25.2
-  calories_burned: 253
+  weight: 190
+  body_fat_pct: 25
+  calories_burned: 500
   fat_tolerance: 0.1
   protein_tolerance: 0.1
   age: 54.3
-  body_mass_index: 26.3
-  weight_kg: 88.1
+  body_mass_index: 25.8
+  weight_kg: 86.2
   height_cm: 182.9
-  fat_mass: 49
-  lean_body_mass: 145.3
-  activity_ratio: 1
-  calories_base_metabolic_rate: 1751
-  calories_resting: 2101
-  calories_goal_unadjusted: 2354
+  fat_mass: 47.5
+  lean_body_mass: 142.5
+  activity_ratio: 0.9
+  calories_base_metabolic_rate: 1732
+  calories_resting: 2078
+  calories_goal_unadjusted: 2578
   deficit_pct: 25
-  protein_goal_unadjusted: 145
-  fiber_goal_unadjusted: 33
+  protein_goal_unadjusted: 128
+  fiber_goal_unadjusted: 36
   netcarbs_goal_unadjusted: 20
-  fat_goal_unadjusted: 188
-  fat_goal_percentage_unadjusted: 72
+  fat_goal_unadjusted: 221
+  fat_goal_percentage_unadjusted: 77
   netcarb_goal_percentage_unadjusted: 3
-  protein_goal_percentage_unadjusted: 25
-  calories_goal: 1766
-  fat_goal: 123
-  fiber_goal: 25
+  protein_goal_percentage_unadjusted: 20
+  calories_goal: 1934
+  fat_goal: 149
+  fiber_goal: 27
   netcarbs_goal: 20
-  protein_goal: 145
-  fat_goal_percentage: 63
-  netcarb_goal_percentage: 5
-  protein_goal_percentage: 33
-  water_liters: 2.9
+  protein_goal: 128
+  fat_goal_percentage: 69
+  netcarb_goal_percentage: 4
+  protein_goal_percentage: 26
+  water_liters: 2.8
 meal:
   Coconut Oil: 1
   Fish Oil: 0.5
@@ -255,7 +255,7 @@ ingredients:
     calories: 80
     fat: 6
     protein: 7
-    out: true
+    out: false
   - name: Macadamia Nuts
     norm: 1
     serving_size: 30
