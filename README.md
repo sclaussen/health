@@ -65,7 +65,7 @@ configuration file and then derives a lot of profile data from that
 and then displays the most pertinent profile information.
 
 ```
-$ health -p
+$ node health -p
 profile attribute                        #
 weight                                 190
 body_fat_pct                            25
@@ -103,7 +103,7 @@ eggs), others in tablespoons (eg Extra Virgin Olive Oil), and the
 remaining are in grams.
 
 ```
-$ health -w 190 -f 25 -b 500 -C 250
+$ node health -w 190 -f 25 -b 500 -C 250
 Adjusting Eggs by 1
 Adjusting Eggs by 1
 Adjusting Extra Virgin Olive Oil by 0.25
