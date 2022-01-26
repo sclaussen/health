@@ -98,7 +98,9 @@ pounds, has a body fat percentage of 25%, has burned 500 calories.  It
 uses a baseline meal configuration, adds 250g of chicken per the -C
 cli option, and a set of meal adjustments to auto configure a meal
 that meets the macro goals as defined by the profile (see
-dat/health.yaml) .  All the numbers are in grams.
+dat/health.yaml).  Some of the data values are in units (eg # of
+eggs), others in tablespoons (eg Extra Virgin Olive Oil), and the
+remaining are in grams.
 
 ```
 $ health -w 190 -f 25 -b 500 -C 250
