@@ -18,17 +18,17 @@ Using the -s slack option requires slack setup and the following environment var
 # Configuration and Usage
 
 - In dat/health.yaml, add the following configuration values (these are all required):
-  - ***sex***: male or female
-  - ***height***: in inches
-  - ***birthday***: YYYY-MM-DD format
-  - ***weight***: in lbs
-  - ***body_fat_pct***: I get this from my withings scale, other options are
+  - **sex**: male or female
+  - **height**: in inches
+  - **birthday**: YYYY-MM-DD format
+  - **weight**: in lbs
+  - **body_fat_pct**: I get this from my withings scale, other options are
     to guess, or use neck/waste measurement based formula (you can
     fine this online).
-  - ***calories_burned***: I use a garmin fenix watch but you need some
+  - **calories_burned**: I use a garmin fenix watch but you need some
     mechanism to estimate how many additional calories you burn a day
     as the result of exercise, walking, etc.
-  - ***activity_ratio**
+  - **activity_ratio**
   - all the other profile configuration values are derived so ignore them for now
 - Run `node health -p`
 
@@ -37,36 +37,36 @@ Using the -s slack option requires slack setup and the following environment var
     configuration file.  Here is what is dervied and how it pertains
     to meal planning:
 
-    - ***Gross Daily Caloric Goal***: You profile data is used to
+    - **Gross Daily Caloric Goal**: You profile data is used to
       calculate your base metabolic rate
-      (***calories_base_metabolic_rate***), then that * 1.2 determines
-      your resting caloric requirement (***calories_resting***), then
+      (**calories_base_metabolic_rate**), then that * 1.2 determines
+      your resting caloric requirement (**calories_resting**), then
       I add your exercise burned calories to determine your total
-      caloric requirement (***calories_goal_unadjusted***).
+      caloric requirement (**calories_goal_unadjusted**).
 
-    - ***Net Daily Caloric Goal***: If you are trying to lose weight,
+    - **Net Daily Caloric Goal**: If you are trying to lose weight,
       there's an deficit percentage that lowers your daily caloric
-      consumption goal defined by (***deficit_pct***).  Applying that
+      consumption goal defined by (**deficit_pct**).  Applying that
       value to the unadjusted caloric goal we get your adjusted
-      calorie goal for the day (***calories_goal***).  This value is
+      calorie goal for the day (**calories_goal**).  This value is
       used to determine your macro goals (fat and protein), as well as
       your daily fiber and water goals.
 
-    - ***Daily NetCarbs Goal***: This value represents the max number
+    - **Daily NetCarbs Goal**: This value represents the max number
       of netcarbs (carbs minus fiber) that you want to consume in a
-      day.  Define it using ***netcarbs_goal***.
+      day.  Define it using **netcarbs_goal**.
 
-    - ***Protein Activity Ratio***: The ***activity_ratio*** defines
+    - **Protein Activity Ratio**: The **activity_ratio** defines
       how many grams per pound of lean body mass you need to
       maintain/grow your muscle mass.  Valid values can be found on
       the web.  This value in combination with your derived lean body
       mass are used to determine how many grams of protein you need
-      (***protein_goal***).
+      (**protein_goal**).
 
     - **Fat Goal**: Since your netcarbs is a constant, and your
       protein goal is a function of you activity level, the remaining
       calories you need to consume are a function of fat
-      (***fat_goal***).
+      (**fat_goal**).
 
 - To configure meals:
   - Update the dat/health.yaml meal section with your baseline meal.
