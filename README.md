@@ -66,27 +66,27 @@ and then displays the most pertinent profile information.
 
 ```
 $ health -p
-profile attribute                                  #
-weight                                           190
-body_fat_pct                                      25
-calories_burned                                  500
-age                                             54.3
-body_mass_index                                 25.8
-fat_mass                                        47.5
-lean_body_mass                                 142.5
-activity_ratio                                   0.9
-calories_base_metabolic_rate                    1732
-calories_resting                                2078
-calories_goal_unadjusted                        2578
-deficit_pct                                       25
-calories_goal                                   1934
-fat_goal                                         149
-fiber_goal                                        27
-netcarbs_goal                                     20
-protein_goal                                     128
-water_liters                                     2.8
-macros_unadjusted                            77/3/20
-macros                                       69/4/26
+profile attribute                        #
+weight                                 190
+body_fat_pct                            25
+calories_burned                        500
+age                                   54.3
+body_mass_index                       25.8
+fat_mass                              47.5
+lean_body_mass                       142.5
+activity_ratio                         0.9
+calories_base_metabolic_rate          1732
+calories_resting                      2078
+calories_goal_unadjusted              2578
+deficit_pct                             25
+calories_goal                         1934
+fat_goal                               149
+fiber_goal                              27
+netcarbs_goal                           20
+protein_goal                           128
+water_liters                           2.8
+macros_unadjusted                  77/3/20
+macros                             69/4/26
 ```
 
 

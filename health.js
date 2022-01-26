@@ -163,7 +163,7 @@ function printProfile(profile) {
         {
             name: 'name',
             alias: 'profile attribute',
-            width: -40
+            width: -30
         },
         {
             name: 'value',
