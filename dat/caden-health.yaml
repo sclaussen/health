@@ -2,38 +2,38 @@ profile:
   sex: male
   height: 72
   birthdate: 1967-09-27
-  weight: 194.3
-  body_fat_pct: 25.2
-  calories_burned: 253
-  fat_tolerance: 0.1
-  protein_tolerance: 0.1
+  activity: 0.85
+  deficit: 25
+  weight: 194.5
+  body_fat: 26.4
+  burned: 969
+  fat_tolerance: 0.05
+  protein_tolerance: 0.04
   age: 54.3
-  body_mass_index: 26.3
-  weight_kg: 88.1
+  body_mass_index: 26.4
+  weight_kg: 88.2
   height_cm: 182.9
-  fat_mass: 49
-  lean_body_mass: 145.3
-  activity_ratio: 1
-  calories_base_metabolic_rate: 1751
-  calories_resting: 2101
-  calories_goal_unadjusted: 2354
-  deficit_pct: 25
-  protein_goal_unadjusted: 145
-  fiber_goal_unadjusted: 33
+  fat_mass: 51.3
+  lean_body_mass: 143.2
+  calories_base_metabolic_rate: 1752
+  calories_resting: 2102
+  calories_goal_unadjusted: 3071
+  protein_goal_unadjusted: 122
+  fiber_goal_unadjusted: 43
   netcarbs_goal_unadjusted: 20
-  fat_goal_unadjusted: 188
-  fat_goal_percentage_unadjusted: 72
+  fat_goal_unadjusted: 278
+  fat_goal_percentage_unadjusted: 81
   netcarb_goal_percentage_unadjusted: 3
-  protein_goal_percentage_unadjusted: 25
-  calories_goal: 1766
-  fat_goal: 123
-  fiber_goal: 25
-  netcarbs_goal: 20
-  protein_goal: 145
-  fat_goal_percentage: 63
-  netcarb_goal_percentage: 5
-  protein_goal_percentage: 33
+  protein_goal_percentage_unadjusted: 16
   water_liters: 2.9
+  calories_goal: 2303
+  protein_goal: 122
+  fiber_goal: 32
+  netcarbs_goal: 20
+  fat_goal: 193
+  fat_goal_percentage: 75
+  netcarb_goal_percentage: 3
+  protein_goal_percentage: 21
 meal:
   Coconut Oil: 1
   Fish Oil: 0.5
@@ -42,7 +42,7 @@ meal:
   Arugula: 145
   Collared Greens: 100
   Romaine: 300
-  Broccoli: 200
+  Broccoli: 250
   Cauliflower: 100
   Mushrooms: 100
   Radish: 100
@@ -62,9 +62,9 @@ recipes:
   - adjustments:
       Tuna: 1
   - adjustments:
-      Extra Virgin Olive Oil: 0.25
-  - adjustments:
       String Cheese: 1
+  - adjustments:
+      Extra Virgin Olive Oil: 0.25
   - adjustments:
       Pumpkin Seeds: 5
   - adjustments:
@@ -165,8 +165,6 @@ ingredients:
     fat: 2.5
     protein: 21
     max: 1
-    out: true
-    date: 1/23/22
   - name: Arugula
     norm: 1
     serving_size: 20
@@ -206,7 +204,6 @@ ingredients:
     fiber: 3
     netcarbs: 1
     protein: 2
-    max: 250
   - name: Cauliflower
     norm: 1
     serving_size: 85
@@ -214,7 +211,6 @@ ingredients:
     fiber: 2
     netcarbs: 2
     protein: 2
-    max: 250
     out: true
   - name: Mushrooms
     norm: 1
@@ -255,7 +251,7 @@ ingredients:
     calories: 80
     fat: 6
     protein: 7
-    out: true
+    max: 1
   - name: Macadamia Nuts
     norm: 1
     serving_size: 30

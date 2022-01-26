@@ -1,5 +1,5 @@
 'use strict';
-process.env.DEBUG = 'health';
+// process.env.DEBUG = 'health';
 const d = require('debug')('health');
 
 const fs = require('fs');
@@ -37,18 +37,21 @@ async function health(args) {
     let options = parse(args);
     healthDefinition = YAML.parse(fs.readFileSync('./dat/health.yaml', 'utf8'), { prettyErrors: true });
     profile = getProfile(options);
+    if (options.profile) {
+        console.log(printProfile(profile));
+        process.exit(0);
+    }
+
+
     ingredientsDb = getIngredients(options);
     meal = getMeal(options);
 
     let recipes = healthDefinition.recipes;
     macros = getMacros(meal);
-    while (!macrosAreWithinToleranceRange(macros)) {
-        if (!addMealIngredients(meal, recipes)) {
-            break;
-        }
-        macros = getMacros(meal);
+    while (addMealIngredients(meal, recipes)) {
     }
 
+    macros = getMacros(meal);
     meal = _.filter(meal, function(ingredient) {
         if (ingredient.amount > 0) return true;
     });
@@ -83,14 +86,14 @@ function getProfile(options) {
 
     // Allow the command line values to take precedent over the profile data
     profile.weight = options.weight || profile.weight;
-    profile.body_fat = round(options.body_fat || profile.body_fat, 1);
-    profile.burned = options.burned || profile.burned;
+    profile.body_fat_pct = round(options.body_fat_pct || profile.body_fat_pct, 1);
+    profile.calories_burned = options.calories_burned || profile.calories_burned;
 
     // Derive the BMI
     profile.body_mass_index = round((profile.weight / (profile.height * profile.height)) * 703, 1);
 
     // Determine the fat mass and lean body mass given the body fat percentage
-    profile.fat_mass = round(profile.weight * (profile.body_fat / 100), 1);
+    profile.fat_mass = round(profile.weight * (profile.body_fat_pct / 100), 1);
     profile.lean_body_mass = round(profile.weight - profile.fat_mass, 1);
 
     // Derive the base metabolic rate (male/female dependent)
@@ -108,12 +111,10 @@ function getProfile(options) {
     //
     // Based on this total daily calorie goal, derive the amount of
     // fat, fiber, netcarbs, protein, and water required.
-    profile.calories_goal_unadjusted = round(profile.calories_resting + profile.burned);
-    profile.protein_goal_unadjusted = round(profile.lean_body_mass * profile.activity);
+    profile.calories_goal_unadjusted = round(profile.calories_resting + profile.calories_burned);
+    profile.protein_goal_unadjusted = round(profile.lean_body_mass * profile.activity_ratio);
     profile.fiber_goal_unadjusted = round((profile.calories_goal_unadjusted / 1000) * 14);
-    profile.netcarbs_goal_unadjusted = 20;
     profile.fat_goal_unadjusted = round((profile.calories_goal_unadjusted - ((profile.protein_goal_unadjusted + profile.netcarbs_goal_unadjusted) * 4)) / 9);
-    profile.water_liters = round((profile.weight / 2) * .029574, 1)
     profile.fat_goal_percentage_unadjusted = round(((profile.fat_goal_unadjusted * 9) / profile.calories_goal_unadjusted) * 100);
     profile.netcarb_goal_percentage_unadjusted = round(((profile.netcarbs_goal_unadjusted * 4) / profile.calories_goal_unadjusted) * 100);
     profile.protein_goal_percentage_unadjusted = round(((profile.protein_goal_unadjusted * 4) / profile.calories_goal_unadjusted) * 100);
@@ -121,18 +122,55 @@ function getProfile(options) {
     // Adjust the daily calorie goal based on the deficit percentage,
     // and then derive the daily macro goal for fat, fiber, netcarbs,
     // and protein.
-    profile.calories_goal = round(profile.calories_goal_unadjusted - (profile.calories_goal_unadjusted * (profile.deficit / 100)));
-    profile.protein_goal = round(profile.lean_body_mass * profile.activity);
+    profile.calories_goal = round(profile.calories_goal_unadjusted - (profile.calories_goal_unadjusted * (profile.deficit_pct / 100)));
+    profile.protein_goal = round(profile.lean_body_mass * profile.activity_ratio);
     profile.fiber_goal = round((profile.calories_goal / 1000) * 14);
-    profile.netcarbs_goal = 20;
+    profile.netcarbs_goal = profile.netcarbs_goal_unadjusted;
     profile.fat_goal = round((profile.calories_goal - ((profile.protein_goal + profile.netcarbs_goal) * 4)) / 9);
     profile.fat_goal_percentage = round(((profile.fat_goal * 9) / profile.calories_goal) * 100);
     profile.netcarb_goal_percentage = round(((profile.netcarbs_goal * 4) / profile.calories_goal) * 100);
     profile.protein_goal_percentage = round(((profile.protein_goal * 4) / profile.calories_goal) * 100);
+    profile.water_liters = round((profile.weight / 2) * .029574, 1)
 
     fs.writeFileSync('./dat/health.yaml', YAML.stringify(healthDefinition, null, 4), 'utf8')
 
     return profile;
+}
+
+
+function printProfile(profile) {
+    let remove = [ 'sex', 'height', 'birthdate', 'fat_tolerance', 'protein_tolerance', 'weight_kg', 'height_cm', 'fat_goal_percentage_unadjusted', 'netcarb_goal_percentage_unadjusted', 'protein_goal_percentage_unadjusted', 'fat_goal_percentage', 'netcarb_goal_percentage', 'protein_goal_percentage', 'fat_goal_unadjusted', 'fiber_goal_unadjusted', 'netcarbs_goal_unadjusted', 'protein_goal_unadjusted' ];
+    let data = [];
+
+    for (let key of _.keys(profile)) {
+        if (_.includes(remove, key)) {
+            continue;
+        }
+        let value = profile[key];
+        data.push({ name: key, value: value });
+    }
+    data.push({
+        name: 'macros_unadjusted',
+        value: profile['fat_goal_percentage_unadjusted'] + '/' + profile['netcarb_goal_percentage_unadjusted'] + '/' + profile['protein_goal_percentage_unadjusted']
+    });
+    data.push({
+        name: 'macros',
+        value: profile['fat_goal_percentage'] + '/' + profile['netcarb_goal_percentage'] + '/' + profile['protein_goal_percentage']
+    });
+    p4(data);
+
+    return table(data, [
+        {
+            name: 'name',
+            alias: 'profile attribute',
+            width: -40
+        },
+        {
+            name: 'value',
+            alias: '#',
+            width: 11,
+        },
+    ]);
 }
 
 
@@ -294,6 +332,10 @@ function testRecipe(meal, recipe) {
         }
     }
 
+    if (_.isEmpty(adjustments)) {
+        return false;
+    }
+
     return adjustments;
 }
 
@@ -402,42 +444,42 @@ function print(meal, options) {
         {
             name: 'amount',
             alias: '#',
-            format: "dependent",
+            format: 'dependent',
             width: 5,
             post: 3
         },
         {
             name: 'totalCalories',
             alias: 'Cal',
-            format: "integer",
+            format: 'integer',
             width: 5,
             post: 3
         },
         {
             name: 'totalFat',
             alias: 'Fat',
-            format: options.precision,
+            format: 'integer',
             width: 5,
             post: 3
         },
         {
             name: 'totalFiber',
             alias: 'Fib',
-            format: options.precision,
+            format: 'integer',
             width: 5,
             post: 3
         },
         {
             name: 'totalNetcarbs',
             alias: 'NCb',
-            format: options.precision,
+            format: 'integer',
             width: 5,
             post: 3
         },
         {
             name: 'totalProtein',
             alias: 'Pro',
-            format: options.precision,
+            format: 'integer',
             width: 5,
             post: 3
         },
@@ -454,7 +496,7 @@ function printSummary(meal, options) {
         {
             name: 'amount',
             alias: '#',
-            format: "dependent",
+            format: 'dependent',
             width: 5,
             post: 3
         },
@@ -464,20 +506,41 @@ function printSummary(meal, options) {
 
 function parse(args) {
     program
+        .option('-p, --profile', 'Derive and print profile information only')
+
         .option('-C, --chicken [grams]', 'Chicken')
         .option('-S, --salmon [grams]', 'Salmon')
         .option('-B, --beef [grams]', 'Beef')
         .option('-P, --pork-chop [grams]', 'Pork chop')
 
-        .option('-p, --precision', 'Display output more precisely using tenths')
         .option('-s, --slack', 'Send summary to slack')
 
         .option('-w, --weight <weight>', 'Weight (lbs)')
         .option('-f, --body-fat <body-fat>', 'Body fat percentage')
-        .option('-b, --burned <burned>', 'Calories burned beyond BMR per day')
+        .option('-b, --calories_burned <calories_burned>', 'Calories burned beyond BMR per day')
 
         .addHelpText('after', `
-examples here
+
+To generate profile information based on health.yaml:
+$ node health -p
+
+To generate profile information based on health.yaml with overrides:
+$ node health -p -w 175 -f 20 -b 500
+
+Generate a meal plan using the defaults in health.yaml:
+$ node health
+
+Generate a meal plan using the defaults in health.yaml with 200g chicken:
+$ node health -C
+
+Generate a meal plan using the defaults in health.yaml with 250g chicken:
+$ node health -C 250
+
+Generate a meal plan using the defaults in health.yaml with 200g salmon with overrides:
+$ node health -w 175 -f 20 -b 500 -C 250
+
+Generate a meal plan using the defaults in health.yaml with 200g salmon with overrides and send to slack:
+$ node health -w 175 -f 20 -b 500 -C 250 -s
 `)
         .parse(args);
 
@@ -515,18 +578,13 @@ examples here
         }
     }
 
-    if (!options.precision) {
-        options.precision = 'integer';
-    } else {
-        options.precision = 'float';
-    }
-
-    if (options.burned) {
-        options.burned = parseInt(options.burned);
+    if (options.caloriesBurned) {
+        options.calories_burned = parseInt(options.caloriesBurned);
+        delete options.caloriesBurned;
     }
 
     if (options.bodyFat) {
-        options.body_fat = options.bodyFat;
+        options.body_fat_pct = options.bodyFat;
         delete options.bodyFat;
     }
 
