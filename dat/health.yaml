@@ -5,8 +5,6 @@ profile:
   weight: 190
   body_fat_pct: 20
   calories_burned: 500
-  fat_tolerance: 0
-  protein_tolerance: 0
   age: 54.3
   body_mass_index: 25.8
   weight_kg: 86.2
@@ -34,6 +32,8 @@ profile:
   netcarb_goal_percentage: 4
   protein_goal_percentage: 28
   water_liters: 2.8
+  fat_tolerance: 0
+  protein_tolerance: 0
 meal:
   Coconut Oil: 1
   Fish Oil: 0.5

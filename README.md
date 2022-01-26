@@ -15,6 +15,34 @@ Using the -s slack option requires slack setup and the following environment var
 
 
 
+# Configuration and Usage
+
+- In dat/health.yaml, add the following configuration values (these are all required):
+  - sex: male or female
+  - height: in inches
+  - birthday: YYYY-MM-DD format
+  - weight: in lbs
+  - body_fat_pct: I get this from my withings scale, other options are
+    to guess, or use neck/waste measurement based formula (you can
+    fine this online).
+  - calories_burned: I use a garmin fenix watch but you need some
+    mechanism to estimate how many additional calories you burn a day
+    as the result of exercise, walking, etc.
+  - all the other profile configuration values are derived so ignore them
+- Run `node health -p`: this will derive the remaining profile
+  configuration values, display them, as well as update them in your
+  dat/health.yaml configuration file.
+- To configure meals:
+  - Update the dat/health.yaml meal section with your baseline meal.
+  - Update the dat/health.yaml recipes section with the ordered adjustments you can make to your meal to reach your macro goals.
+  - Update the dat/health.yaml ingredients section with all the ingredients you use.
+    - NOTE: I need to explain the "norm" property
+    - NOTE: I need to explain the "out" property
+    - NOTE: I need to explain the "min" and "max" properties
+- Now run `node health` to generate your meal.
+
+
+
 # Usage
 
 ```

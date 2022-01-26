@@ -132,6 +132,9 @@ function getProfile(options) {
     profile.protein_goal_percentage = round(((profile.protein_goal * 4) / profile.calories_goal) * 100);
     profile.water_liters = round((profile.weight / 2) * .029574, 1)
 
+    profile.fat_tolerance = 0;
+    profile.protein_tolerance = 0;
+
     fs.writeFileSync('./dat/health.yaml', YAML.stringify(healthDefinition, null, 4), 'utf8')
 
     return profile;
