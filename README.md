@@ -3,16 +3,16 @@ $ node health --help
 Usage: health [options]
 
 Options:
-  -p, --profile              Derive profile information only
-  -C, --chicken [grams]      Chicken
-  -S, --salmon [grams]       Salmon
-  -B, --beef [grams]         Beef
-  -P, --pork-chop [grams]    Pork chop
-  -s, --slack                Send summary to slack
-  -w, --weight <weight>      Weight (lbs)
-  -f, --body-fat <body-fat>  Body fat percentage
-  -b, --burned <burned>      Calories burned beyond BMR per day
-  -h, --help                 display help for command
+  -p, --profile                            Derive and print profile information only
+  -w, --weight <weight>                    Weight (lbs)
+  -f, --body-fat <body-fat>                Body fat percentage
+  -b, --calories_burned <calories_burned>  Calories burned beyond BMR per day
+  -C, --chicken [grams]                    Chicken
+  -S, --salmon [grams]                     Salmon
+  -B, --beef [grams]                       Beef
+  -P, --pork-chop [grams]                  Pork chop
+  -s, --slack                              Send meal summary to slack
+  -h, --help                               display help for command
 
 
 To generate profile information based on health.yaml:

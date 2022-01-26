@@ -508,16 +508,16 @@ function parse(args) {
     program
         .option('-p, --profile', 'Derive and print profile information only')
 
+        .option('-w, --weight <weight>', 'Weight (lbs)')
+        .option('-f, --body-fat <body-fat>', 'Body fat percentage')
+        .option('-b, --calories_burned <calories_burned>', 'Calories burned beyond BMR per day')
+
         .option('-C, --chicken [grams]', 'Chicken')
         .option('-S, --salmon [grams]', 'Salmon')
         .option('-B, --beef [grams]', 'Beef')
         .option('-P, --pork-chop [grams]', 'Pork chop')
 
-        .option('-s, --slack', 'Send summary to slack')
-
-        .option('-w, --weight <weight>', 'Weight (lbs)')
-        .option('-f, --body-fat <body-fat>', 'Body fat percentage')
-        .option('-b, --calories_burned <calories_burned>', 'Calories burned beyond BMR per day')
+        .option('-s, --slack', 'Send meal summary to slack')
 
         .addHelpText('after', `
 
