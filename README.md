@@ -63,7 +63,7 @@ Using the -s slack option requires slack setup and the following environment var
       mass are used to determine how many grams of protein you need
       (***protein_goal***).
 
-    - ***Fat Goal***: Since your netcarbs is a constant, and your
+    - *Fat Goal*: Since your netcarbs is a constant, and your
       protein goal is a function of you activity level, the remaining
       calories you need to consume are a function of fat
       (***fat_goal***).
