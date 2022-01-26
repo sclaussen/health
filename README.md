@@ -28,10 +28,46 @@ Using the -s slack option requires slack setup and the following environment var
   - ***calories_burned***: I use a garmin fenix watch but you need some
     mechanism to estimate how many additional calories you burn a day
     as the result of exercise, walking, etc.
-  - all the other profile configuration values are derived so ignore them
-- Run `node health -p`: this will derive the remaining profile
-  configuration values, display them, as well as update them in your
-  dat/health.yaml configuration file.
+  - ***activity_ratio**
+  - all the other profile configuration values are derived so ignore them for now
+- Run `node health -p`
+
+  - This will derive the remaining profile] configuration values,
+    display them, as well as update them in your dat/health.yaml
+    configuration file.  Here is what is dervied and how it pertains
+    to meal planning:
+
+    - ```Gross Daily Caloric Goal```: You profile data is used to
+      calculate your base metabolic rate
+      (```calories_base_metabolic_rate```), then that * 1.2 determines
+      your resting caloric requirement (```calories_resting```), then
+      I add your exercise burned calories to determine your total
+      caloric requirement (```calories_goal_unadjusted```).
+
+    - ```Net Daily Caloric Goal```: If you are trying to lose weight,
+      there's an deficit percentage that lowers your daily caloric
+      consumption goal defined by (```deficit_pct```).  Applying that
+      value to the unadjusted caloric goal we get your adjusted
+      calorie goal for the day (```calories_goal```).  This value is
+      used to determine your macro goals (fat and protein), as well as
+      your daily fiber and water goals.
+
+    - ```Daily NetCarbs Goal```: This value represents the max number
+      of netcarbs (carbs minus fiber) that you want to consume in a
+      day.  Define it using ```netcarbs_goal```.
+
+    - ```Protein Activity Ratio```: The ```activity_ratio``` defines
+      how many grams per pound of lean body mass you need to
+      maintain/grow your muscle mass.  Valid values can be found on
+      the web.  This value in combination with your derived lean body
+      mass are used to determine how many grams of protein you need
+      (```protein_goal```).
+
+    - ```Fat Goal```: Since your netcarbs is a constant, and your
+      protein goal is a function of you activity level, the remaining
+      calories you need to consume are a function of fat
+      (```fat_goal```).
+
 - To configure meals:
   - Update the dat/health.yaml meal section with your baseline meal.
   - Update the dat/health.yaml recipes section with the ordered adjustments you can make to your meal to reach your macro goals.
