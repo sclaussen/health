@@ -18,14 +18,14 @@ Using the -s slack option requires slack setup and the following environment var
 # Configuration and Usage
 
 - In dat/health.yaml, add the following configuration values (these are all required):
-  - sex: male or female
-  - height: in inches
-  - birthday: YYYY-MM-DD format
-  - weight: in lbs
-  - body_fat_pct: I get this from my withings scale, other options are
+  - ***sex***: male or female
+  - ***height***: in inches
+  - ***birthday***: YYYY-MM-DD format
+  - ***weight***: in lbs
+  - ***body_fat_pct***: I get this from my withings scale, other options are
     to guess, or use neck/waste measurement based formula (you can
     fine this online).
-  - calories_burned: I use a garmin fenix watch but you need some
+  - ***calories_burned***: I use a garmin fenix watch but you need some
     mechanism to estimate how many additional calories you burn a day
     as the result of exercise, walking, etc.
   - all the other profile configuration values are derived so ignore them
