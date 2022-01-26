@@ -15,7 +15,7 @@ Using the -s slack option requires slack setup and the following environment var
 
 
 
-# Profile Usage
+# Usage
 
 ```
 $ node health --help
@@ -57,7 +57,48 @@ $ node health -w 175 -f 20 -b 500 -C 250 -s
 ```
 
 
-# Meal Usage
+
+# Profile Example
+
+The -p option uses some basic information in the dat/health.yaml
+configuration file and then derives a lot of profile data from that
+and then displays the most pertinent profile information.
+
+```
+$ health -p
+profile attribute                                  #
+weight                                           190
+body_fat_pct                                      25
+calories_burned                                  500
+age                                             54.3
+body_mass_index                                 25.8
+fat_mass                                        47.5
+lean_body_mass                                 142.5
+activity_ratio                                   0.9
+calories_base_metabolic_rate                    1732
+calories_resting                                2078
+calories_goal_unadjusted                        2578
+deficit_pct                                       25
+calories_goal                                   1934
+fat_goal                                         149
+fiber_goal                                        27
+netcarbs_goal                                     20
+protein_goal                                     128
+water_liters                                     2.8
+macros_unadjusted                            77/3/20
+macros                                       69/4/26
+```
+
+
+
+# Meal Example
+
+This is an example of generating a meal plan for someone who is 190
+pounds, has a body fat percentage of 25%, has burned 500 calories.  It
+uses a baseline meal configuration, adds 250g of chicken per the -C
+cli option, and a set of meal adjustments to auto configure a meal
+that meets the macro goals as defined by the profile (see
+dat/health.yaml) .  All the numbers are in grams.
 
 ```
 $ health -w 190 -f 25 -b 500 -C 250
