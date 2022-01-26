@@ -94,8 +94,8 @@ macros                             69/4/26
 # Meal Example
 
 This is an example of generating a meal plan for someone who is 190
-pounds, has a body fat percentage of 25%, has burned 500 calories.  It
-uses a baseline meal configuration, adds 250g of chicken per the -C
+pounds, has a body fat percentage of 25%, and has burned 500 calories.
+It uses a baseline meal configuration, adds 250g of chicken per the -C
 cli option, and a set of meal adjustments to auto configure a meal
 that meets the macro goals as defined by the profile (see
 dat/health.yaml).  Some of the data values are in units (eg # of
