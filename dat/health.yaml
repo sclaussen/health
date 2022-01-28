@@ -4,36 +4,36 @@ profile:
   birthdate: 1967-09-27
   weight: 190
   body_fat_pct: 20
-  calories_burned: 500
+  calories_burned: 600
   age: 54.3
   body_mass_index: 25.8
   weight_kg: 86.2
   height_cm: 182.9
   fat_mass: 38
   lean_body_mass: 152
-  activity_ratio: 0.9
+  activity_ratio: 0.8
   calories_base_metabolic_rate: 1732
   calories_resting: 2078
-  calories_goal_unadjusted: 2578
+  calories_goal_unadjusted: 2678
   deficit_pct: 25
-  protein_goal_unadjusted: 137
-  fiber_goal_unadjusted: 36
+  protein_goal_unadjusted: 122
+  fiber_goal_unadjusted: 37
   netcarbs_goal_unadjusted: 20
-  fat_goal_unadjusted: 217
-  fat_goal_percentage_unadjusted: 76
+  fat_goal_unadjusted: 234
+  fat_goal_percentage_unadjusted: 79
   netcarb_goal_percentage_unadjusted: 3
-  protein_goal_percentage_unadjusted: 21
-  calories_goal: 1934
-  fat_goal: 145
-  fiber_goal: 27
+  protein_goal_percentage_unadjusted: 18
+  calories_goal: 2009
+  fat_goal: 160
+  fiber_goal: 28
   netcarbs_goal: 20
-  protein_goal: 137
-  fat_goal_percentage: 67
+  protein_goal: 122
+  fat_goal_percentage: 72
   netcarb_goal_percentage: 4
-  protein_goal_percentage: 28
+  protein_goal_percentage: 24
   water_liters: 2.8
   fat_tolerance: 0
-  protein_tolerance: 0
+  protein_tolerance: 0.05
 meal:
   Coconut Oil: 1
   Fish Oil: 0.5
@@ -51,20 +51,20 @@ meal:
   Avocado: 140
   Mustard: 4
 recipes:
-  - type: randomize
-    cardinality: 1
-    adjustments:
-      Sardines: 1
-      Smoked Sardines: 1
+  - adjustments:
       Mackerel: 1
   - adjustments:
-      Eggs: 1
+      Sardines: 1
+  - adjustments:
+      Smoked Sardines: 1
   - adjustments:
       Tuna: 1
   - adjustments:
-      Extra Virgin Olive Oil: 0.25
+      Eggs: 1
   - adjustments:
       String Cheese: 1
+  - adjustments:
+      Extra Virgin Olive Oil: 0.25
   - adjustments:
       Pumpkin Seeds: 5
   - adjustments:
@@ -206,7 +206,7 @@ ingredients:
     fiber: 3
     netcarbs: 1
     protein: 2
-    max: 250
+    max: 450
   - name: Cauliflower
     norm: 1
     serving_size: 85
@@ -270,6 +270,7 @@ ingredients:
     calories: 10
     fiber: 1
     protein: 1
+    out: true
   - name: Mustard
     norm: 15
     serving_size: 5
