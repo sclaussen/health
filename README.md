@@ -244,15 +244,14 @@ perspective:
   Kaeberlein @ Univ of Washington, Steve Horvath @ UCLA, et al) I now
   believe there are mechanisms that can attack the process of aging
   and as a result reverse aging on parts of the body resulting in
-  extending both health and life span (eg sirtuins, rapamycin, mTOR,
-  metformin, et al).  This is an extremely hot and very active field
-  of research.
+  extending both health and life span.  This is an extremely hot and
+  very active field of research.
 
 - **Insulin**: One of the most important things I've learned is that
-  insulin resistance is the foundational element of most of the
-  chronic diseases (eg heart disease, cancer, stroke, Alzheimers, and
-  type 2 diabetes).  The design center of my daily tactical nutrition
-  and health focus is insulin management.
+  insulin resistance is a key ingredient of most of the chronic
+  diseases (eg heart disease, cancer, stroke, Alzheimers, and type 2
+  diabetes).  The design center of my daily tactical nutrition and
+  health focus is insulin management.
 
 - **Nutrition vs Exercise**: I now believe both what you eat and when
   you eat are far more important components of health than exercise
@@ -276,13 +275,12 @@ perspective:
 
 - **Fruit**: Everyone should be well informed on non-alcoholic fatty
   liver disease (NAFLD), its health implications, and what the source
-  is (corn syrup/fructose and thus processed foods and fruits).
+  is (corn syrup/fructose, many processed foods, and fruits).
 
 - **Antiquated Thinking**: Many health care professionals are still
-  working from antiquated scripts.  Oddly enough, doctors are not
-  trained in nutrition.  I encourage you to do stop listening to
-  others (me included), get off the fence, and do your own research.
-  Know the science.
+  working from antiquated scripts.  Oddly enough, doctors have little
+  to no training in nutrition.  I encourage you to do stop listening
+  to others, do the research, and to learn the science.
 
 - **Food Industry**: I've reaffirmed my view of the food industry.  I
   believe they are just like tobacco.  There are 10 companies with
@@ -317,7 +315,7 @@ quick list:
 - Dramatically reduce (or stop) consumption of foods containing sugar
 - Stop cooking in bad oils
 - Improve your sleep habits
-- Upgrade the quality of the food that you should be consuming
+- Upgrade the quality of the food that you are consuming
 - Research time restricted feeding (aka intermittent fasting), get started with a 16:8 plan
 - Research Keto and seriously consider it (for those with a BMI > 25 or pre-diabetes/diabetes)
 
@@ -366,7 +364,6 @@ quick list:
 ### General podcasts that often have a health/nutrition focus
 * [Tim Ferriss](https://www.youtube.com/user/masterlock77)
 * [Tom Bilyeu](https://www.youtube.com/channel/UCnYMOamNKLGVlJgRUbamveA)
-* [Joe Rogan](https://www.youtube.com/user/PowerfulJRE)
 * [Lex Fridman](https://www.youtube.com/channel/UCSHZKyawb77ixDdsGog4iWA)
 
 ### Highlighted interviews
@@ -395,7 +392,7 @@ quick list:
 * [Timoo Coffee Measuring Scoop 1 Tablespoon, Set of 5: Kitchen & Dining](https://www.amazon.com/Timoo-Coffee-Measuring-Tablespoon-Stainless/dp/B07HD2TZ2M/ref=sr_1_6?dchild=1&keywords=tablespoons&qid=1624559569&sr=8-6): Useful as I measure all liquids in tablespoons
 * [Fullstar Vegetable Chopper](https://www.amazon.com/Vegetable-Chopper-Spiralizer-Slicer-Choppers/dp/B0764HS4SL/ref=sr_1_6?dchild=1&keywords=dicer&qid=1624559592&sr=8-6): For dicing salad ingredients, hot peppers, etal
 * [Twist Top Food Deli Containers](https://www.amazon.com/gp/product/B077G76C6J/ref=ppx_yo_dt_b_asin_title_o09_s00?ie=UTF8&psc=1): Useful for prepping salad ingredients, et al
-* [5 Quart Salad Bowl](https://www.amazon.com/OXO-Good-Grips-5-Quart-Mixing/dp/B0001YH1MU/ref=sr_1_2?dchild=1&keywords=5+quart+oxo&qid=1626811593&sr=8-2) and/or [3 Quart Salad Bowl](https://www.amazon.com/OXO-Grips-3-Quart-Mixing-White/dp/B00004OCMY/ref=sr_1_5?dchild=1&keywords=3+quart+oxo&qid=1626811632&sr=8-5): For huge salads
+* [OXO 5 Quart Salad Bowl](https://www.amazon.com/OXO-Good-Grips-5-Quart-Mixing/dp/B0001YH1MU/ref=sr_1_2?dchild=1&keywords=5+quart+oxo&qid=1626811593&sr=8-2) and/or [3 Quart Salad Bowl](https://www.amazon.com/OXO-Grips-3-Quart-Mixing-White/dp/B00004OCMY/ref=sr_1_5?dchild=1&keywords=3+quart+oxo&qid=1626811632&sr=8-5): For huge salads
 
 ### My supplements
 * [Fish Oil (Omega-3)](https://www.amazon.com/dp/B001LF39S8/ref=twister_B0047VWYSO?_encoding=UTF8&psc=1): What I've started using to supplement Omega-3s
@@ -477,7 +474,7 @@ family is less strict.
     water requirement daily)
 
 - I rarely drink alcohol, when I do I try to consume alcohol with zero
-  carbs (insulin management, NAFLD)
+  carbs (insulin management, AFLD, NAFLD)
 
 
 
@@ -485,7 +482,7 @@ family is less strict.
 
 - Criteria
   - Avoid any foods with sugar or added sugar (insulin management)
-  - Avoid sweeteners that raise my insulin levels even if they don't raise my blood sugar levels (insulin management)
+  - Avoid sweeteners that raise my insulin levels even if they don't raise blood sugar levels (insulin management)
 
 - I removed all foods from my diet that contain added sweeteners of any type
   - The exception is 85-92% dark chocolate that by definition is cocoa
@@ -504,6 +501,8 @@ family is less strict.
   - ginger
   - black pepper
   - chili pepper
+  - serrano pepper
+  - salsa (netcarb 0)
   - garam masala (mix)
   - ...
 
@@ -529,12 +528,12 @@ family is less strict.
 ### Oils
 
 Criteria:
-  - Avoid cooking and topping oils that use heat and/or chemical
-    extraction - eg vegetable, soybean, corn oils, ... (inflammatory,
-    et al)
+  - Avoid cooking and topping oils that are manufactured using heat
+    and/or chemical extraction - eg vegetable, soybean, corn oils,
+    ... (inflammatory, et al)
   - Use cooking oils with high smoke points (inflammatory, et al)
   - Beware that when you eat out your food will typically be cooked in
-    bad oils because they are cheap
+    bad oils due to their low cost
 
 - We add extra virgin olive oil (typically organic) to our salads
   (healthy fat).
@@ -542,7 +541,8 @@ Criteria:
 - The rest of my family also uses vinegar as a topping oil (higher
   carb footprint).
 
-- We cook eggs in organic coconut oil (MCTs, higher smoke point).
+- We cook eggs in organic coconut oil or avocado oil (MCTs, higher
+  smoke point).
 
 - We cook most everything else in organic avocado oil (high smoke
   point).
