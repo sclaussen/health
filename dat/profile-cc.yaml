@@ -1,39 +1,39 @@
 profile:
   sex: male
-  height: 72
-  birthdate: 1967-09-27
-  weight: 192.8
-  body_fat_pct: 25.8
-  calories_burned: 631
+  height: 58.5
+  birthdate: 2012-06-16
+  weight: 73.2
+  body_fat_pct: 21.5
+  calories_burned: 200
   age: 54.3
-  body_mass_index: 26.1
-  weight_kg: 87.5
+  body_mass_index: 26.4
+  weight_kg: 88.5
   height_cm: 182.9
-  fat_mass: 49.7
-  lean_body_mass: 143.1
-  activity_ratio: 0.85
-  calories_base_metabolic_rate: 1745
-  calories_resting: 2094
-  calories_goal_unadjusted: 2725
+  fat_mass: 39
+  lean_body_mass: 156
+  activity_ratio: 0.8
+  calories_base_metabolic_rate: 1755
+  calories_resting: 2106
+  calories_goal_unadjusted: 2906
   deficit_pct: 25
-  protein_goal_unadjusted: 122
-  fiber_goal_unadjusted: 38
+  protein_goal_unadjusted: 125
+  fiber_goal_unadjusted: 41
   netcarbs_goal_unadjusted: 20
-  fat_goal_unadjusted: 240
-  fat_goal_percentage_unadjusted: 79
+  fat_goal_unadjusted: 258
+  fat_goal_percentage_unadjusted: 80
   netcarb_goal_percentage_unadjusted: 3
-  protein_goal_percentage_unadjusted: 18
-  calories_goal: 2044
-  fat_goal: 164
-  fiber_goal: 29
+  protein_goal_percentage_unadjusted: 17
+  calories_goal: 2180
+  fat_goal: 178
+  fiber_goal: 31
   netcarbs_goal: 20
-  protein_goal: 122
-  fat_goal_percentage: 72
+  protein_goal: 125
+  fat_goal_percentage: 73
   netcarb_goal_percentage: 4
-  protein_goal_percentage: 24
+  protein_goal_percentage: 23
   water_liters: 2.9
   fat_tolerance: 0
-  protein_tolerance: 0.05
+  protein_tolerance: 0
 meal:
   Coconut Oil: 1
   Fish Oil: 0.5
@@ -42,27 +42,25 @@ meal:
   Arugula: 145
   Collared Greens: 100
   Romaine: 300
-  Broccoli: 100
+  Broccoli: 200
   Cauliflower: 100
   Mushrooms: 100
   Radish: 100
   Salsa: 4
-  Jalapeno Pepper: 60
-  Serrano Pepper: 0
-  Avocado: 70
+  Serrano Pepper: 60
+  Avocado: 140
   Mustard: 4
 recipes:
   - adjustments:
-      Mackerel: 1
-  - type: randomize
-    select: 1
-    adjustments:
-      Smoked Sardines: 1
+      Eggs: 1
+  - adjustments:
       Sardines: 1
   - adjustments:
-      Tuna: 1
+      Smoked Sardines: 1
   - adjustments:
-      Eggs: 1
+      Mackerel: 1
+  - adjustments:
+      Tuna: 1
   - adjustments:
       String Cheese: 1
   - adjustments:
@@ -74,42 +72,30 @@ recipes:
   - type: randomize
     select: 1
     adjustments:
+      Broccoli: 10
       Cauliflower: 10
-      Broccoli: 20
 ingredients:
   - name: Coconut Oil
     norm: 14
     serving_size: 14
     calories: 130
     fat: 14
-    fiber: 0
-    netcarbs: 0
-    protein: 0
   - name: Extra Virgin Olive Oil
     norm: 14
     serving_size: 14
     calories: 120
     fat: 14
     max: 5
-    fiber: 0
-    netcarbs: 0
-    protein: 0
   - name: Avocado Oil
     norm: 14
     serving_size: 14
     calories: 130
     fat: 14
-    fiber: 0
-    netcarbs: 0
-    protein: 0
   - name: Fish Oil
     norm: 14
     serving_size: 5
     calories: 40
     fat: 4.5
-    fiber: 0
-    netcarbs: 0
-    protein: 0
   - name: Pumpkin Seeds
     norm: 1
     serving_size: 28
@@ -118,49 +104,38 @@ ingredients:
     fiber: 2
     netcarb: 1
     protein: 8
-    netcarbs: 0
   - name: Chicken
     norm: 1
     serving_size: 100
     calories: 115
     fat: 2.7
     protein: 22
-    fiber: 0
-    netcarbs: 0
   - name: Beef
     norm: 1
     serving_size: 100
     calories: 214
     fat: 15.2
     protein: 19
-    fiber: 0
-    netcarbs: 0
   - name: Pork Chop
     norm: 1
     serving_size: 113
     calories: 220
     fat: 11
     protein: 30
-    fiber: 0
-    netcarbs: 0
   - name: Salmon
     norm: 1
     serving_size: 112
     calories: 150
     fat: 5
     protein: 25
-    fiber: 0
-    netcarbs: 0
   - name: Eggs
     norm: 50
     serving_size: 50
     calories: 70
     fat: 5
     protein: 6
-    max: 7
+    max: 8
     min: 3
-    fiber: 0
-    netcarbs: 0
   - name: Mackerel
     norm: 85
     serving_size: 85
@@ -169,8 +144,6 @@ ingredients:
     fiber: 0.2
     protein: 22
     max: 1
-    out: true
-    netcarbs: 0
   - name: Smoked Sardines
     norm: 85
     serving_size: 85
@@ -178,8 +151,6 @@ ingredients:
     fat: 11
     protein: 18
     max: 1
-    fiber: 0
-    netcarbs: 0
   - name: Sardines
     norm: 85
     serving_size: 85
@@ -187,8 +158,6 @@ ingredients:
     fat: 12
     protein: 21
     max: 1
-    fiber: 0
-    netcarbs: 0
   - name: Tuna
     norm: 85
     serving_size: 85
@@ -196,10 +165,8 @@ ingredients:
     fat: 2.5
     protein: 21
     max: 1
-    out: false
+    out: true
     date: 1/23/22
-    fiber: 0
-    netcarbs: 0
   - name: Arugula
     norm: 1
     serving_size: 20
@@ -240,7 +207,6 @@ ingredients:
     netcarbs: 1
     protein: 2
     max: 450
-    fat: 0
   - name: Cauliflower
     norm: 1
     serving_size: 85
@@ -249,8 +215,7 @@ ingredients:
     netcarbs: 2
     protein: 2
     max: 250
-    out: false
-    fat: 0
+    out: true
   - name: Mushrooms
     norm: 1
     serving_size: 35
@@ -275,16 +240,7 @@ ingredients:
     fiber: 0.23
     netcarbs: 0.18
     protein: 0.11
-    out: false
-  - name: Jalapeno Pepper
-    norm: 1
-    serving_size: 14
-    calories: 4.1
-    fat: 0.05
-    fiber: 0.39
-    netcarbs: 0.52
-    protein: 0.13
-    out: false
+    out: true
   - name: Avocado
     norm: 1
     serving_size: 50
@@ -300,8 +256,6 @@ ingredients:
     fat: 6
     protein: 7
     out: false
-    fiber: 0
-    netcarbs: 0
   - name: Macadamia Nuts
     norm: 1
     serving_size: 30
@@ -310,7 +264,6 @@ ingredients:
     fiber: 3
     netcarbs: 1
     max: 50
-    protein: 0
   - name: Salsa
     norm: 15
     serving_size: 30
@@ -318,46 +271,7 @@ ingredients:
     fiber: 1
     protein: 1
     out: false
-    fat: 0
-    netcarbs: 0
   - name: Mustard
     norm: 15
     serving_size: 5
     calories: 5
-    fat: 0
-    fiber: 0
-    netcarbs: 0
-    protein: 0
-last:
-  - name: Sardines
-    amount: 1
-  - name: Eggs
-    amount: 1
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Pumpkin Seeds
-    amount: 5
-  - name: Pumpkin Seeds
-    amount: 5
-  - name: Macadamia Nuts
-    amount: 5
-  - name: Macadamia Nuts
-    amount: 5
-  - name: Cauliflower
-    amount: 10
-  - name: Cauliflower
-    amount: 10

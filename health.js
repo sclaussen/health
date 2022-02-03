@@ -1,5 +1,5 @@
 'use strict';
-// process.env.DEBUG = 'health';
+process.env.DEBUG = 'health';
 const d = require('debug')('health');
 
 const fs = require('fs');
@@ -19,23 +19,23 @@ const y4 = require('./lib/pr').y4(d);
 const e = require('./lib/pr').e(d);
 
 
+var healthFile = './dat/health.yaml';
 
 var healthDefinition;
 var profile;
 var ingredientsDb;
 var meal;
 var macros;
-
+var addedIngredients = [];
 
 
 health(process.argv);
 
 
-
 async function health(args) {
 
     let options = parse(args);
-    healthDefinition = YAML.parse(fs.readFileSync('./dat/health.yaml', 'utf8'), { prettyErrors: true });
+    healthDefinition = YAML.parse(fs.readFileSync(healthFile, 'utf8'), { prettyErrors: true });
     profile = getProfile(options);
     if (options.profile) {
         console.log(printProfile(profile));
@@ -48,19 +48,38 @@ async function health(args) {
 
     let recipes = healthDefinition.recipes;
     macros = getMacros(meal);
-    while (addMealIngredients(meal, recipes)) {
+    if (options.last) {
+        for (let ingredient of healthDefinition.last) {
+            console.log('Adjusting ' + ingredient.name + ' by ' + ingredient.amount);
+            updateIngredient(meal, ingredient.name, ingredient.amount);
+        }
+    } else {
+        while (addMealIngredients(meal, recipes)) {
+        }
+
+        healthDefinition.last = addedIngredients;
+        fs.writeFileSync(healthFile, YAML.stringify(healthDefinition, null, 4), 'utf8')
     }
 
     macros = getMacros(meal);
+    p4(macros);
+
     meal = _.filter(meal, function(ingredient) {
         if (ingredient.amount > 0) return true;
     });
-    console.log();
-    console.log(print(macros, options));
-    console.log();
-    console.log(print(meal, options));
+
+    console.log()
+    let profileData = ''
+    profileData += 'Wt/Fat%/Burned: ' + profile.weight + '   ' + profile.body_fat_pct + '   ' + profile.calories_burned + '\n'
+    profileData += 'Ratio/Deficit:  ' + profile.activity_ratio + '   ' + profile.deficit_pct + '\n';
+    profileData += 'GCal/NCal/Diff: ' + profile.calories_goal_unadjusted + '   ' + profile.calories_goal + '   ' + round(macros[3].totalCalories) + '\n';
+    profileData += 'GFat/D GPro/D:  ' + profile.fat_goal + ' ' + round(macros[3].totalFat) + '   ' + profile.protein_goal + ' ' + round(macros[3].totalProtein) + '\n';
+
+    console.log(profileData);
+    console.log(printMeal(macros, options));
+    console.log(printMeal(meal, options));
     if (options.slack) {
-        slack('```' + printSummary(meal, options) + '```');
+        slack('```' + profileData + '\n' + printMealSummary(meal, options) + '```');
     }
 }
 
@@ -135,45 +154,9 @@ function getProfile(options) {
     // profile.fat_tolerance = 0;
     // profile.protein_tolerance = 0;
 
-    fs.writeFileSync('./dat/health.yaml', YAML.stringify(healthDefinition, null, 4), 'utf8')
+    fs.writeFileSync(healthFile, YAML.stringify(healthDefinition, null, 4), 'utf8')
 
     return profile;
-}
-
-
-function printProfile(profile) {
-    let remove = [ 'sex', 'height', 'birthdate', 'fat_tolerance', 'protein_tolerance', 'weight_kg', 'height_cm', 'fat_goal_percentage_unadjusted', 'netcarb_goal_percentage_unadjusted', 'protein_goal_percentage_unadjusted', 'fat_goal_percentage', 'netcarb_goal_percentage', 'protein_goal_percentage', 'fat_goal_unadjusted', 'fiber_goal_unadjusted', 'netcarbs_goal_unadjusted', 'protein_goal_unadjusted' ];
-    let data = [];
-
-    for (let key of _.keys(profile)) {
-        if (_.includes(remove, key)) {
-            continue;
-        }
-        let value = profile[key];
-        data.push({ name: key, value: value });
-    }
-    data.push({
-        name: 'macros_unadjusted',
-        value: profile['fat_goal_percentage_unadjusted'] + '/' + profile['netcarb_goal_percentage_unadjusted'] + '/' + profile['protein_goal_percentage_unadjusted']
-    });
-    data.push({
-        name: 'macros',
-        value: profile['fat_goal_percentage'] + '/' + profile['netcarb_goal_percentage'] + '/' + profile['protein_goal_percentage']
-    });
-    p4(data);
-
-    return table(data, [
-        {
-            name: 'name',
-            alias: 'profile attribute',
-            width: -30
-        },
-        {
-            name: 'value',
-            alias: '#',
-            width: 11,
-        },
-    ]);
 }
 
 
@@ -291,6 +274,8 @@ function addMealIngredients(meal, recipes) {
                 let ingredientAmount = adjustments[ingredientName];
                 console.log('Adjusting ' + ingredientName + ' by ' + ingredientAmount);
                 updateIngredient(meal, ingredientName, ingredientAmount);
+                addedIngredients.push({ name: ingredientName, amount: ingredientAmount });
+                // p4(addedIngredients);
             }
 
             return true;
@@ -311,15 +296,12 @@ function testRecipe(meal, recipe) {
             adjustments[shuffledIngredientName] = recipe.adjustments[shuffledIngredientName];
         }
         recipe.adjustments = adjustments;
-        p('Shuffled: ' + JSON.stringify(_.keys(recipe.adjustments)));
     }
 
     let adjustments = {};
     for (let ingredientName of _.keys(recipe.adjustments)) {
 
-        p('  - ' + ingredientName);
         if (getIngredient(ingredientName).out) {
-            p('    - Out');
             continue;
         }
 
@@ -346,22 +328,18 @@ function testRecipe(meal, recipe) {
 function testIngredient(meal, ingredientName, ingredientAmount) {
     let ingredient = updateIngredient(meal, ingredientName, ingredientAmount);
     if (ingredient.max && (ingredient.amount > ingredient.max)) {
-        p('    - Maxed');
         return false;
     }
 
     if (ingredient.min && (ingredient.amount < ingredient.min)) {
-        p('    - Minned');
         return false;
     }
 
     let newMacros = getMacros(meal);
     if (doMacrosExceedTolerance(newMacros)) {
-        p('    - Exceeds');
         return false;
     }
 
-    p('    - ADD');
     return true;
 }
 
@@ -402,7 +380,7 @@ function doMacrosExceedTolerance(macros) {
         }
     }
 
-    if (getMacro(macros, 'goals')['totalNetcarbs'] > 20) {
+    if (getMacro(macros, 'actuals')['totalNetcarbs'] > 20) {
         return true;
     }
 
@@ -422,7 +400,6 @@ function macrosAreWithinToleranceRange(macros) {
     for (let macro of [ 'totalFat', 'totalProtein' ]) {
         let actual = getMacro(macros, 'actuals')[macro];
         let goal = getMacro(macros, 'goals')[macro];
-        p('Minimum ' + macro + ': ' + (goal - (goal * profile[map[macro]])));
         if ((actual + (goal * profile[map[macro]])) < goal) {
             return false;
         }
@@ -438,7 +415,42 @@ function getMacro(macros, name) {
 }
 
 
-function print(meal, options) {
+function printProfile(profile) {
+    let remove = [ 'sex', 'height', 'birthdate', 'fat_tolerance', 'protein_tolerance', 'weight_kg', 'height_cm', 'fat_goal_percentage_unadjusted', 'netcarb_goal_percentage_unadjusted', 'protein_goal_percentage_unadjusted', 'fat_goal_percentage', 'netcarb_goal_percentage', 'protein_goal_percentage', 'fat_goal_unadjusted', 'fiber_goal_unadjusted', 'netcarbs_goal_unadjusted', 'protein_goal_unadjusted' ];
+    let data = [];
+
+    for (let key of _.keys(profile)) {
+        if (_.includes(remove, key)) {
+            continue;
+        }
+        let value = profile[key];
+        data.push({ name: key, value: value });
+    }
+    data.push({
+        name: 'macros_unadjusted',
+        value: profile['fat_goal_percentage_unadjusted'] + '/' + profile['netcarb_goal_percentage_unadjusted'] + '/' + profile['protein_goal_percentage_unadjusted']
+    });
+    data.push({
+        name: 'macros',
+        value: profile['fat_goal_percentage'] + '/' + profile['netcarb_goal_percentage'] + '/' + profile['protein_goal_percentage']
+    });
+
+    return table(data, [
+        {
+            name: 'name',
+            alias: 'profile attribute',
+            width: -30
+        },
+        {
+            name: 'value',
+            alias: '#',
+            width: 11,
+        },
+    ]);
+}
+
+
+function printMeal(meal, options) {
     return table(meal, [
         {
             name: 'name',
@@ -490,7 +502,7 @@ function print(meal, options) {
 }
 
 
-function printSummary(meal, options) {
+function printMealSummary(meal, options) {
     return table(meal, [
         {
             name: 'name',
@@ -520,6 +532,7 @@ function parse(args) {
         .option('-B, --beef [grams]', 'Beef')
         .option('-P, --pork-chop [grams]', 'Pork chop')
 
+        .option('-l, --last', 'Use last set of ingredient adjustments')
         .option('-s, --slack', 'Send meal summary to slack')
 
         .addHelpText('after', `
@@ -540,7 +553,7 @@ Generate a meal plan using the defaults in health.yaml with 250g chicken:
 $ node health -C 250
 
 Generate a meal plan using the defaults in health.yaml with 200g salmon with overrides:
-$ node health -w 175 -f 20 -b 500 -C 250
+$ node health -w 175 -f 20 -b 500 -S
 
 Generate a meal plan using the defaults in health.yaml with 200g salmon with overrides and send to slack:
 $ node health -w 175 -f 20 -b 500 -C 250 -s
@@ -582,7 +595,6 @@ $ node health -w 175 -f 20 -b 500 -C 250 -s
     }
 
     if (options.caloriesBurned) {
-        p4(options);
         options.calories_burned = parseInt(options.caloriesBurned);
         delete options.caloriesBurned;
     }
