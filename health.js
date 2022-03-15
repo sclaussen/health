@@ -10,6 +10,8 @@ var program = require('commander');
 var moment = require('moment');
 
 const table = require('./lib/table').table;
+const fmtFloat = require('./lib/table').fmtFloat;
+const fmtInt = require('./lib/table').fmtInt;
 const round = require('./lib/table').round;
 const slack = require('./lib/slack').slack;
 
@@ -70,10 +72,10 @@ async function health(args) {
 
     console.log()
     let profileData = ''
-    profileData += 'Wt/Fat%/Burned: ' + profile.weight + '   ' + profile.body_fat_pct + '   ' + profile.calories_burned + '\n'
-    profileData += 'Ratio/Deficit:  ' + profile.activity_ratio + '   ' + profile.deficit_pct + '\n';
-    profileData += 'GCal/NCal/Diff: ' + profile.calories_goal_unadjusted + '   ' + profile.calories_goal + '   ' + round(macros[3].totalCalories) + '\n';
-    profileData += 'GFat/D GPro/D:  ' + profile.fat_goal + ' ' + round(macros[3].totalFat) + '   ' + profile.protein_goal + ' ' + round(macros[3].totalProtein) + '\n';
+    profileData += 'Weight: ' + fmtFloat(profile.weight, 3, 1) + '  Fat: ' +  fmtFloat(profile.body_fat_pct, 2, 1) + '%  Burn: ' + fmtInt(profile.calories_burned, 3) + '\n'
+    profileData += 'Ratio:  ' + fmtFloat(profile.activity_ratio, 0, 2) + '   Def: ' + fmtInt(profile.deficit_pct, 2) + '%\n';
+    // profileData += 'GCal/NCal/Diff: ' + profile.calories_goal_unadjusted + '   ' + profile.calories_goal + '   ' + round(macros[3].totalCalories) + '\n';
+    // profileData += 'GFat/D GPro/D:  ' + profile.fat_goal + ' ' + round(macros[3].totalFat) + '   ' + profile.protein_goal + ' ' + round(macros[3].totalProtein) + '\n';
 
     console.log(profileData);
     console.log(printMeal(macros, options));
@@ -168,7 +170,7 @@ function getIngredients(options) {
         ingredient.fat = ingredient.fat || 0;
         ingredient.fiber = ingredient.fiber || 0;
         ingredient.netcarbs = ingredient.netcarbs || 0;
-        ingredient.protein = ingredient.protein || 0;
+        ingredient.proten = ingredient.proten || 0;
     }
     return ingredientsDb;
 }
@@ -182,15 +184,16 @@ function getMeal(options) {
         updateIngredient(meal, ingredientName, mealDefinition[ingredientName]);
     }
 
-    if (options.protein) {
-        updateIngredient(meal, options.protein, options.proteinGrams);
+    if (options.meat) {
+        updateIngredient(meal, options.meat, options.meatGrams);
 
-        if (options.protein === 'Beef') {
+        if (options.meat === 'Beef') {
             updateIngredient(meal, 'Eggs', -1);
+            updateIngredient(meal, 'Mackerel', 1);
         }
 
-        if (options.protein === 'Salmon') {
-            updateIngredient(meal, 'Fish Oil', -0.5);
+        if (options.meat === 'Salmon') {
+            updateIngredient(meal, 'Fish Oil', -1);
         }
     }
 
@@ -201,7 +204,7 @@ function getMeal(options) {
 function getMacros(meal) {
 
     let macroGoalsUnadjusted = {
-        name: 'goals_unadjusted',
+        name: 'gross',
         totalCalories: profile.calories_goal_unadjusted,
         totalFat: profile.fat_goal_unadjusted,
         totalFiber: profile.fiber_goal_unadjusted,
@@ -267,6 +270,7 @@ function getMacros(meal) {
 // True: indicates an adjustment recipe was added to the meal successfully
 // False: indicates no more adjustments can be made
 function addMealIngredients(meal, recipes) {
+    e('addMealIngredients')
     for (let recipe of recipes) {
         let adjustments = testRecipe(meal, recipe);
         if (adjustments) {
@@ -565,32 +569,32 @@ $ node health -w 175 -f 20 -b 500 -C 250 -s
     // By default 200g of meat is assumed, but can be overridden as an
     // option
     if (options.chicken) {
-        options.protein = 'Chicken';
+        options.meat = 'Chicken';
         if (options.chicken === true) {
-            options.proteinGrams = 200;
+            options.meatGrams = 200;
         } else {
-            options.proteinGrams = options.chicken;
+            options.meatGrams = options.chicken;
         }
     } else if (options.salmon) {
-        options.protein = 'Salmon';
+        options.meat = 'Salmon';
         if (options.salmon === true) {
-            options.proteinGrams = 200;
+            options.meatGrams = 200;
         } else {
-            options.proteinGrams = options.salmon;
+            options.meatGrams = options.salmon;
         }
     } else if (options.beef) {
-        options.protein = 'Beef';
+        options.meat = 'Beef';
         if (options.beef === true) {
-            options.proteinGrams = 200;
+            options.meatGrams = 200;
         } else {
-            options.proteinGrams = options.beef;
+            options.meatGrams = options.beef;
         }
     } else if (options.porkChop) {
-        options.protein = 'Pork Chop';
+        options.meat = 'Pork Chop';
         if (options.porkChop === true) {
-            options.proteinGrams = 200;
+            options.meatGrams = 200;
         } else {
-            options.proteinGrams = options.porkChop;
+            options.meatGrams = options.porkChop;
         }
     }
 

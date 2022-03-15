@@ -1,81 +1,71 @@
-profile:
-  sex: male
-  height: 72
-  birthdate: 1967-09-27
-  weight: 192.8
-  body_fat_pct: 25.8
-  calories_burned: 631
-  age: 54.3
-  body_mass_index: 26.1
-  weight_kg: 87.5
-  height_cm: 182.9
-  fat_mass: 49.7
-  lean_body_mass: 143.1
-  activity_ratio: 0.85
-  calories_base_metabolic_rate: 1745
-  calories_resting: 2094
-  calories_goal_unadjusted: 2725
-  deficit_pct: 25
-  protein_goal_unadjusted: 122
-  fiber_goal_unadjusted: 38
-  netcarbs_goal_unadjusted: 20
-  fat_goal_unadjusted: 240
-  fat_goal_percentage_unadjusted: 79
-  netcarb_goal_percentage_unadjusted: 3
-  protein_goal_percentage_unadjusted: 18
-  calories_goal: 2044
-  fat_goal: 164
-  fiber_goal: 29
-  netcarbs_goal: 20
-  protein_goal: 122
-  fat_goal_percentage: 72
-  netcarb_goal_percentage: 4
-  protein_goal_percentage: 24
-  water_liters: 2.9
-  fat_tolerance: 0
-  protein_tolerance: 0.05
 meal:
   Coconut Oil: 1
   Fish Oil: 0.5
   Extra Virgin Olive Oil: 3
   Eggs: 5
   Arugula: 145
-  Collared Greens: 100
   Romaine: 300
+  Collared Greens: 50
   Broccoli: 100
-  Cauliflower: 100
-  Mushrooms: 100
+  Cauliflower: 150
+  Mushrooms: 0
   Radish: 100
-  Salsa: 4
-  Jalapeno Pepper: 60
   Serrano Pepper: 0
-  Avocado: 70
+  Avocado: 140
   Mustard: 4
 recipes:
   - adjustments:
+      Eggs: 1
+  - adjustments:
       Mackerel: 1
-  - type: randomize
-    select: 1
-    adjustments:
-      Smoked Sardines: 1
+  - adjustments:
       Sardines: 1
   - adjustments:
-      Tuna: 1
+      Smoked Sardines: 1
   - adjustments:
-      Eggs: 1
+      Broccoli: 1
   - adjustments:
       String Cheese: 1
   - adjustments:
-      Extra Virgin Olive Oil: 0.25
-  - adjustments:
       Pumpkin Seeds: 5
   - adjustments:
-      Macadamia Nuts: 5
-  - type: randomize
-    select: 1
-    adjustments:
-      Cauliflower: 10
-      Broccoli: 20
+      Extra Virgin Olive Oil: 0.25
+profile:
+  sex: male
+  height: 72
+  birthdate: 1967-09-27
+  weight: 194.6
+  body_fat_pct: 26.7
+  calories_burned: 40
+  age: 54.4
+  body_mass_index: 26.4
+  weight_kg: 88.3
+  height_cm: 182.9
+  fat_mass: 52
+  lean_body_mass: 142.6
+  activity_ratio: 0.85
+  calories_base_metabolic_rate: 1753
+  calories_resting: 2104
+  calories_goal_unadjusted: 2144
+  deficit_pct: 20
+  protein_goal_unadjusted: 121
+  fiber_goal_unadjusted: 30
+  netcarbs_goal_unadjusted: 20
+  fat_goal_unadjusted: 176
+  fat_goal_percentage_unadjusted: 74
+  netcarb_goal_percentage_unadjusted: 4
+  protein_goal_percentage_unadjusted: 23
+  calories_goal: 1715
+  fat_goal: 128
+  fiber_goal: 24
+  netcarbs_goal: 20
+  protein_goal: 121
+  fat_goal_percentage: 67
+  netcarb_goal_percentage: 5
+  protein_goal_percentage: 28
+  water_liters: 2.9
+  fat_tolerance: 0
+  protein_tolerance: 0
 ingredients:
   - name: Coconut Oil
     norm: 14
@@ -85,6 +75,8 @@ ingredients:
     fiber: 0
     netcarbs: 0
     protein: 0
+    meat: 0
+    proten: 0
   - name: Extra Virgin Olive Oil
     norm: 14
     serving_size: 14
@@ -94,6 +86,8 @@ ingredients:
     fiber: 0
     netcarbs: 0
     protein: 0
+    meat: 0
+    proten: 0
   - name: Avocado Oil
     norm: 14
     serving_size: 14
@@ -102,6 +96,8 @@ ingredients:
     fiber: 0
     netcarbs: 0
     protein: 0
+    meat: 0
+    proten: 0
   - name: Fish Oil
     norm: 14
     serving_size: 5
@@ -110,6 +106,8 @@ ingredients:
     fiber: 0
     netcarbs: 0
     protein: 0
+    meat: 0
+    proten: 0
   - name: Pumpkin Seeds
     norm: 1
     serving_size: 28
@@ -119,6 +117,8 @@ ingredients:
     netcarb: 1
     protein: 8
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Chicken
     norm: 1
     serving_size: 100
@@ -127,6 +127,8 @@ ingredients:
     protein: 22
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Beef
     norm: 1
     serving_size: 100
@@ -135,6 +137,18 @@ ingredients:
     protein: 19
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
+  - name: Lamb
+    norm: 1
+    serving_size: 85
+    calories: 253
+    fat: 22
+    netcarbs: 0.19
+    protein: 13.09
+    fiber: 0
+    meat: 0
+    proten: 0
   - name: Pork Chop
     norm: 1
     serving_size: 113
@@ -143,6 +157,8 @@ ingredients:
     protein: 30
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Salmon
     norm: 1
     serving_size: 112
@@ -151,16 +167,45 @@ ingredients:
     protein: 25
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
+  - name: Top Sirloin Cap
+    norm: 1
+    serving_size: 238
+    calories: 125
+    fat: 14
+    protein: 51
+    fiber: 0
+    netcarbs: 0
+    meat: 0
+    proten: 0
+  - name: Argentine Red Shrimp
+    norm: 1
+    serving_size: 110
+    calories: 100
+    fat: 1.5
+    protein: 21
+    fiber: 0
+    netcarbs: 0
+    cholesterol: 170
+    sodium: 240
+    calcium: 60
+    iron: 2
+    potassium: 220
+    meat: 0
+    proten: 0
   - name: Eggs
     norm: 50
     serving_size: 50
     calories: 70
     fat: 5
     protein: 6
-    max: 7
-    min: 3
     fiber: 0
     netcarbs: 0
+    min: 3
+    max: 7
+    meat: 0
+    proten: 0
   - name: Mackerel
     norm: 85
     serving_size: 85
@@ -169,8 +214,10 @@ ingredients:
     fiber: 0.2
     protein: 22
     max: 1
-    out: true
+    out: false
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Smoked Sardines
     norm: 85
     serving_size: 85
@@ -180,6 +227,8 @@ ingredients:
     max: 1
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Sardines
     norm: 85
     serving_size: 85
@@ -189,6 +238,8 @@ ingredients:
     max: 1
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Tuna
     norm: 85
     serving_size: 85
@@ -200,6 +251,8 @@ ingredients:
     date: 1/23/22
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Arugula
     norm: 1
     serving_size: 20
@@ -208,6 +261,8 @@ ingredients:
     fiber: 0.32
     netcarbs: 0.41
     protein: 0.52
+    meat: 0
+    proten: 0
   - name: Spinach
     norm: 1
     serving_size: 85
@@ -216,6 +271,8 @@ ingredients:
     fiber: 2
     netcarbs: 1
     protein: 2
+    meat: 0
+    proten: 0
   - name: Collared Greens
     norm: 1
     serving_size: 36
@@ -224,6 +281,9 @@ ingredients:
     fiber: 1.4
     netcarbs: 0.6
     protein: 1.09
+    out: false
+    meat: 0
+    proten: 0
   - name: Romaine
     norm: 1
     serving_size: 47
@@ -232,6 +292,8 @@ ingredients:
     fiber: 0.99
     netcarbs: 0.51
     protein: 0.58
+    meat: 0
+    proten: 0
   - name: Broccoli
     norm: 1
     serving_size: 85
@@ -239,8 +301,10 @@ ingredients:
     fiber: 3
     netcarbs: 1
     protein: 2
-    max: 450
+    max: 275
     fat: 0
+    meat: 0
+    proten: 0
   - name: Cauliflower
     norm: 1
     serving_size: 85
@@ -251,6 +315,8 @@ ingredients:
     max: 250
     out: false
     fat: 0
+    meat: 0
+    proten: 0
   - name: Mushrooms
     norm: 1
     serving_size: 35
@@ -259,6 +325,8 @@ ingredients:
     fiber: 0.35
     netcarbs: 0.75
     protein: 1.1
+    meat: 0
+    proten: 0
   - name: Radish
     norm: 1
     serving_size: 58
@@ -267,6 +335,8 @@ ingredients:
     fiber: 0.93
     netcarbs: 1.07
     protein: 0.39
+    meat: 0
+    proten: 0
   - name: Serrano Pepper
     norm: 1
     serving_size: 6
@@ -276,6 +346,8 @@ ingredients:
     netcarbs: 0.18
     protein: 0.11
     out: false
+    meat: 0
+    proten: 0
   - name: Jalapeno Pepper
     norm: 1
     serving_size: 14
@@ -285,6 +357,8 @@ ingredients:
     netcarbs: 0.52
     protein: 0.13
     out: false
+    meat: 0
+    proten: 0
   - name: Avocado
     norm: 1
     serving_size: 50
@@ -293,6 +367,8 @@ ingredients:
     fiber: 3.4
     netcarbs: 0.9
     protein: 1
+    meat: 0
+    proten: 0
   - name: String Cheese
     norm: 28
     serving_size: 28
@@ -302,6 +378,8 @@ ingredients:
     out: false
     fiber: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Macadamia Nuts
     norm: 1
     serving_size: 30
@@ -311,6 +389,8 @@ ingredients:
     netcarbs: 1
     max: 50
     protein: 0
+    meat: 0
+    proten: 0
   - name: Salsa
     norm: 15
     serving_size: 30
@@ -320,6 +400,8 @@ ingredients:
     out: false
     fat: 0
     netcarbs: 0
+    meat: 0
+    proten: 0
   - name: Mustard
     norm: 15
     serving_size: 5
@@ -328,36 +410,360 @@ ingredients:
     fiber: 0
     netcarbs: 0
     protein: 0
+    meat: 0
+    proten: 0
 last:
-  - name: Sardines
+  - name: Eggs
     amount: 1
   - name: Eggs
     amount: 1
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Extra Virgin Olive Oil
-    amount: 0.25
-  - name: Pumpkin Seeds
-    amount: 5
-  - name: Pumpkin Seeds
-    amount: 5
-  - name: Macadamia Nuts
-    amount: 5
-  - name: Macadamia Nuts
-    amount: 5
-  - name: Cauliflower
-    amount: 10
-  - name: Cauliflower
-    amount: 10
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
+  - name: Broccoli
+    amount: 1
