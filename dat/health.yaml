@@ -37,25 +37,25 @@ profile:
   weight: 194.6
   body_fat_pct: 26.7
   calories_burned: 40
-  age: 54.4
+  age: 54.5
   body_mass_index: 26.4
   weight_kg: 88.3
   height_cm: 182.9
   fat_mass: 52
   lean_body_mass: 142.6
   activity_ratio: 0.85
-  calories_base_metabolic_rate: 1753
-  calories_resting: 2104
-  calories_goal_unadjusted: 2144
+  calories_base_metabolic_rate: 1752
+  calories_resting: 2102
+  calories_goal_unadjusted: 2142
   deficit_pct: 20
   protein_goal_unadjusted: 121
   fiber_goal_unadjusted: 30
   netcarbs_goal_unadjusted: 20
-  fat_goal_unadjusted: 176
+  fat_goal_unadjusted: 175
   fat_goal_percentage_unadjusted: 74
   netcarb_goal_percentage_unadjusted: 4
   protein_goal_percentage_unadjusted: 23
-  calories_goal: 1715
+  calories_goal: 1714
   fat_goal: 128
   fiber_goal: 24
   netcarbs_goal: 20
@@ -417,6 +417,8 @@ last:
     amount: 1
   - name: Eggs
     amount: 1
+  - name: Mackerel
+    amount: 1
   - name: Broccoli
     amount: 1
   - name: Broccoli
@@ -766,4 +768,6 @@ last:
   - name: Broccoli
     amount: 1
   - name: Broccoli
+    amount: 1
+  - name: String Cheese
     amount: 1
