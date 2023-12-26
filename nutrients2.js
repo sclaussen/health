@@ -1,7 +1,8 @@
 'use strict'
 process.env.DEBUG = 'health'
+
 const fs = require('fs')
-var YAML = require('js-yaml');
+const YAML = require('js-yaml');
 
 const d = require('debug')('health')
 const p = require('./lib/pr').p(d)
@@ -12,19 +13,14 @@ const curl = require('./lib/curl')
 const table = require('./lib/table').table
 
 
-// Missing:
-// lettuce red leaf
-// Nature’s Rancher, No Sugar Added Hickory Smoked Bacon, 12 ozNature’s Rancher, No Sugar Added Hickory Smoked Baco
-// ...
-
 main()
+
 
 async function main() {
     let ingredients = YAML.load(fs.readFileSync('./ingredients.yaml', 'utf8'));
-    let nutrientConfigs = YAML.load(fs.readFileSync('./config.yaml', 'utf8'));
+    let nutrients = YAML.load(fs.readFileSync('./nutrients.yaml', 'utf8'));
 
     for (let ingredient of ingredients) {
-
         if (ingredient.skip) {
             continue
         }
@@ -43,13 +39,26 @@ async function main() {
         p4(wholeFoods)
         let wf = wholeFoods.props.pageProps.data
 
+
         let data = []
+
+
+        // name (from our input YAML file)
+        // fullName: Ingredient proper name
+        // url: whole foods ingredient url
+        // imageUrl: whole foods image url
+        // brand: whole foods brand
+        // category: whole foods category
         data.push({ name: 'name', value: ingredient.name })
         data.push({ name: 'fullName', value: mapName(wf.name) })
         data.push({ name: 'url', value: ingredient.url })
+        data.push({ name: 'imageUrl', value: wf.images[0].image })
         data.push({ name: 'brand', value: mapBrand(wf.brand.name) })
         data.push({ name: 'category', value: mapCategory(wf.categories.name) })
 
+
+        // TODO: Flag nasty ingredients
+        // Ingredients
         let ingredients = []
         for (let ingredient of wf.ingredients) {
             ingredient = ingredient.replace(/(?<=[^(]*\([^()]*),(?=[^)]*\))/g, ";")
@@ -65,6 +74,8 @@ async function main() {
         }
         data.push({ name: 'ingredients', value: ingredients })
 
+
+        // Allergens
         let allergens = []
         if (wf.allergens) {
             for (let allergen of wf.allergens) {
@@ -73,6 +84,8 @@ async function main() {
         }
         data.push({ name: 'allergens', value: allergens })
 
+
+        // Consumption Unit
         if (ingredient.consumptionUnit) {
             data.push({ name: 'consumptionUnit', value: ingredient.consumptionUnit })
             data.push({ name: 'consumptionGrams', value: ingredient.consumptionGrams })
@@ -80,66 +93,91 @@ async function main() {
             data.push({ name: 'consumptionUnit', value: "grams" })
             data.push({ name: 'consumptionGrams', value: "1" })
         }
+        p4(data);
+
 
         let macroNutrientData = []
+
+
+        // Serving Size
         let servingSize = wf.servingInfo.secondaryServingSize
         if (wf.servingInfo.secondaryServingSizeUom !== 'g' && wf.servingInfo.secondaryServingSizeUom !== 'G') {
             if (!ingredient['conversion_factor']) {
                 console.error('ERROR: No conversion factor exists for ' + ingredient.name)
-                process.exit(1)
+                console.error(wf.servingInfo);
+                // process.exit(1)
+            } else {
+                servingSize *= ingredient.conversion_factor
             }
-            servingSize *= ingredient.conversion_factor
         }
         data.push({ name: "servingSize", value: servingSize })
 
-        for (let nutrientConfig of nutrientConfigs) {
 
-            let wholeFoodsNutrient = _.find(wf.nutritionElements, { name: nutrientConfig.name })
-            if (!wholeFoodsNutrient || wholeFoodsNutrient.perServing == 0) {
+        p4(_.map(wf.nutritionElements, item => _.pick(item, [ 'key', 'uom', 'perServing', 'perServingDisplay' ])));
+        for (let nutrient of nutrients) {
+
+            let wfNutrient = _.find(wf.nutritionElements, { key: nutrient.wf_key })
+            if (!wfNutrient) {
+                console.log('Could not find: ' + nutrient.wf_key);
+                if (nutrient.required) {
+                    process.exit(1);
+                }
                 continue
             }
 
-            let amount = wholeFoodsNutrient.perServing
+            // By default we use perServing, it is more precise.
+            // However, we found a situation where a nutrient only had
+            // a perServingDisplay value but not a perServing value,
+            // so defaulting if necessary.
+            let amount = wfNutrient.perServing || wfNutrient.perServingDisplay;
 
             // If the whole foods nutrient uses a different unit of
             // measure, verify that it's a known uom, and convert it
             // if required.
-            if (wholeFoodsNutrient.uom !== nutrientConfig.unit) {
-                if (wholeFoodsNutrient.uom !== nutrientConfig.alternate_unit.unit) {
-                    console.error("ERROR: The Whole Foods nutrient's unit of measure is unknown!")
+            if (wfNutrient.uom !== nutrient.unit) {
+
+                if (!('alternative_unit' in nutrient) || wfNutrient.uom !== nutrient.alternate_unit.unit) {
+                    p4(nutrient.alternate_unit);
+                    console.error('ERROR: The Whole Foods nutrient\'s unit of measure is unknown: ' + nutrient.name + '/' + wfNutrient.uom)
                     process.exit(1)
                 }
 
-                if (nutrientConfig.alternate_unit.conversion_factor) {
-                    amount = amount * nutrientConfig.alternate_unit.conversion_factor
+                if (nutrient.alternate_unit.conversion_factor) {
+                    amount = amount * nutrient.alternate_unit.conversion_factor
                 }
             }
 
-            data.push({ name: nutrientConfig.alias, value: amount })
+            data.push({ name: nutrient.alias, value: amount })
         }
+
 
         // Add netcarbs to the macro nutrients
         p4(data)
-        let carbs = _.find(data, { name: 'carbohydrates' })
-        let fiber = _.find(data, { name: 'fiber' })
+        let carbs = _.find(data, { name: 'carbohydrates' });
+        let fiber = _.find(data, { name: 'fiber' });
         if (carbs) {
             data.push({ name: "netCarbs", value: carbs.value - fiber.value })
         }
 
+
+        p4(_.map(wf.nutritionElements, item => _.pick(item, [ 'key', 'uom', 'perServing', 'perServingDisplay' ])));
         serialize(data)
         console.log()
     }
 }
+
 
 function mapCategory(category) {
     category = category.replace(/u0026/g, '&')
     return category
 }
 
+
 function mapName(name) {
     name = name.replace(/u0026/g, '&')
     return name
 }
+
 
 function mapBrand(brand) {
     if (brand == '365 BY WFM') return 'Whole Foods 365'
@@ -152,6 +190,7 @@ function mapBrand(brand) {
     brand = brand.replace(/u0026/g, '&')
     return brand
 }
+
 
 function serialize(data) {
     p(data)
@@ -171,19 +210,23 @@ function serialize(data) {
 
     y(data, 'servingSize')
     y(data, 'calories')
+
     y(data, 'fat')
     y(data, 'saturatedFat')
     y(data, 'transFat')
     y(data, 'polyunsaturatedFat')
     y(data, 'monounsaturatedFat')
+
     y(data, 'cholesterol')
     y(data, 'sodium')
+
     y(data, 'carbohydrates')
     y(data, 'fiber')
     y(data, 'sugar')
     y(data, 'addedSugar')
     y(data, 'sugarAlcohool')
     y(data, 'netCarbs')
+
     y(data, 'protein')
 
     y(data, 'omega3')
@@ -210,6 +253,7 @@ function serialize(data) {
     y(data, 'copper')
     y(data, 'calcium')
 }
+
 
 function y(list, name, def, prefix) {
     let pre = prefix || '  '

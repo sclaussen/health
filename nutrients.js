@@ -1,373 +1,279 @@
 'use strict'
+process.env.DEBUG = 'health'
 
-const fs = require('fs');
+const fs = require('fs')
+const YAML = require('js-yaml');
 
-var tokens = [];
-var currentTokenNumber;
-var nutrients = {};
-var  keywords = {
-    'Serving Size': {
-        value: 'poly'
-    },
-    'Calories': {
-    },
-    'Total Fat': {
-        units: [ 'g' ]
-    },
-    'Saturated Fat': {
-        units: [ 'g' ]
-    },
-    'Trans Fat': {
-        units: [ 'g' ]
-    },
-    'Polyunsaturated Fat': {
-        units: [ 'g' ]
-    },
-    'Monounsaturated Fat': {
-        units: [ 'g' ]
-    },
-    'Cholesterol': {
-        units: [ 'mg' ]
-    },
-    'Sodium': {
-        units: [ 'mg' ]
-    },
-    'Total Carbohydrates': {
-        units: [ 'g' ]
-    },
-    'Dietary Fiber': {
-        units: [ 'g' ]
-    },
-    'Sugars': {
-        units: [ 'g' ]
-    },
-    'Includes Added Sugars': {
-        units: [ 'g' ]
-    },
-    'Sugar Alcohol': {
-        units: [ 'g' ]
-    },
-    'Protein': {
-        units: [ 'g' ]
-    },
-    'Vitamin D': {
-        units: [ 'mcg', 'IU' ],
-        conversion_factor: 40,
-    },
-    'Calcium': {
-        units: [ 'mg' ]
-    },
-    'Iron': {
-        units: [ 'mg' ]
-    },
-    'Potassium': {
-        units: [ 'mg' ]
-    },
-    'Vitamin A': {
-        units: [ 'mcg', 'IU' ],
-        conversion_factor: 3.336,
-    },
-    'Vitamin C': {
-        units: [ 'mg' ]
-    },
-    'Vitamin E': {
-        units: [ 'mg', 'IU' ],
-        conversion_factor: 1.5,
-    },
-    'Vitamin K': {
-        units: [ 'µg', 'mcg' ]
-    },
-    'Thiamin': {
-        units: [ 'mg' ]
-    },
-    'Riboflavin': {
-        units: [ 'mg' ]
-    },
-    'Niacin': {
-        units: [ 'mg' ]
-    },
-    'Vitamin B6': {
-        units: [ 'mg' ]
-    },
-    'Folate': {
-        units: [ 'µg', 'mcg' ]
-    },
-    'Folic Acid': {
-        units: [ 'µg', 'mcg' ]
-    },
-    'Vitamin B12': {
-        units: [ 'µg', 'mcg' ]
-    },
-    'Pantothenic Acid': {
-        units: [ 'mg' ]
-    },
-    'Phosphorus': {
-        units: [ 'mg' ]
-    },
-    'Magnesium': {
-        units: [ 'mg' ]
-    },
-    'Zinc': {
-        units: [ 'mg' ]
-    },
-    'Selenium': {
-        units: [ 'µg', 'mcg' ]
-    },
-    'Copper': {
-        units: [ 'mg' ]
-    },
-    'Manganese': {
-        units: [ 'mg' ]
-    },
-};
+const d = require('debug')('health')
+const p = require('./lib/pr').p(d)
+const p4 = require('./lib/pr').p4(d)
+
+const _ = require('lodash')
+const curl = require('./lib/curl')
+const table = require('./lib/table').table
 
 
-const snakeCase = str =>
-      str &&
-      str
-      .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
-      .map(x => x.toLowerCase())
-      .join('_');
+main()
 
-main();
 
-function main() {
-    parse();
-    while (true) {
+async function main() {
+    let ingredients = YAML.load(fs.readFileSync('./ingredients.yaml', 'utf8'));
+    let nutrients = YAML.load(fs.readFileSync('./nutrients.yaml', 'utf8'));
 
-        if (!lookingAtKeyword()) {
-            // process.stdout.write('Skipping: ');
-            while (!lookingAtKeyword()) {
-                let skip = getToken();
-                if (skip === -1) {
-                    finalize();
-                }
-                // process.stdout.write(skip + ' ');
-            }
-            // console.log();
+    for (let ingredient of ingredients) {
+        if (ingredient.skip) {
+            continue
         }
 
-        let keyword = getKeyword();
-        if (keyword === 'Serving Size') {
-            parseServingSize(keyword);
-            continue;
+        let body = (await curl.get(ingredient.url)).body
+        body = body.replace(/<[^<]+>/g, "")
+        body = body.replace(/\n/g, "")
+        body = body.replace(/\n/g, "")
+        body = body.replace(/\\/g, "")
+        body = body.replace(/.+{"props":/g, "{\"props\":")
+        body = body.replace(/"globalAlert.*$/, "")
+        body = body.replace(/,$/, "}}}")
+        // p4(body)
+
+        let wholeFoods = JSON.parse(body)
+        p4(wholeFoods)
+        let wf = wholeFoods.props.pageProps.data
+
+
+        let data = []
+
+
+        // name (from our input YAML file)
+        // fullName: Ingredient proper name
+        // url: whole foods ingredient url
+        // imageUrl: whole foods image url
+        // brand: whole foods brand
+        // category: whole foods category
+        data.push({ name: 'name', value: ingredient.name })
+        data.push({ name: 'fullName', value: mapName(wf.name) })
+        data.push({ name: 'url', value: ingredient.url })
+        data.push({ name: 'imageUrl', value: wf.images[0].image })
+        data.push({ name: 'brand', value: mapBrand(wf.brand.name) })
+        data.push({ name: 'category', value: mapCategory(wf.categories.name) })
+
+
+        // TODO: Flag nasty ingredients
+        // Ingredients
+        let ingredients = []
+        for (let ingredient of wf.ingredients) {
+            ingredient = ingredient.replace(/(?<=[^(]*\([^()]*),(?=[^)]*\))/g, ";")
+            ingredient = ingredient.replace(/(?<=[^(]*\([^()]*)\.(?=[^)]*\))/g, "")
+            ingredient = ingredient.replace(/(?<=[^\[]*\[[^\[\]]*),(?=[^\]]*\])/g, ";")
+            ingredient = ingredient.replace(/(?<=[^\[]*\[[^\[\]]*)\.(?=[^\]]*\])/g, "")
+            for (let separatedIngredient of ingredient.split(/,/)) {
+                separatedIngredient = separatedIngredient.trim()
+                separatedIngredient = separatedIngredient.replace(/Ingredients: /, "")
+                separatedIngredient = separatedIngredient.replace(/\.$/, "")
+                ingredients.push(separatedIngredient)
+            }
+        }
+        data.push({ name: 'ingredients', value: ingredients })
+
+
+        // Allergens
+        let allergens = []
+        if (wf.allergens) {
+            for (let allergen of wf.allergens) {
+                allergens.push(allergen)
+            }
+        }
+        data.push({ name: 'allergens', value: allergens })
+
+
+        // Consumption Unit
+        if (ingredient.consumptionUnit) {
+            data.push({ name: 'consumptionUnit', value: ingredient.consumptionUnit })
+            data.push({ name: 'consumptionGrams', value: ingredient.consumptionGrams })
         } else {
-            parseValue(keyword);
+            data.push({ name: 'consumptionUnit', value: "grams" })
+            data.push({ name: 'consumptionGrams', value: "1" })
         }
+        p4(data);
+
+
+        let macroNutrientData = []
+
+
+        // Serving Size
+        let servingSize = wf.servingInfo.secondaryServingSize
+        if (wf.servingInfo.secondaryServingSizeUom !== 'g' && wf.servingInfo.secondaryServingSizeUom !== 'G') {
+            if (!ingredient['conversion_factor']) {
+                console.error('ERROR: No conversion factor exists for ' + ingredient.name)
+                console.error(wf.servingInfo);
+                // process.exit(1)
+            } else {
+                servingSize *= ingredient.conversion_factor
+            }
+        }
+        data.push({ name: "servingSize", value: servingSize })
+
+
+        p4(_.map(wf.nutritionElements, item => _.pick(item, [ 'key', 'uom', 'perServing', 'perServingDisplay' ])));
+        for (let nutrient of nutrients) {
+
+            let wfNutrient = _.find(wf.nutritionElements, { key: nutrient.wf_key })
+            if (!wfNutrient) {
+                console.log('Could not find: ' + nutrient.wf_key);
+                if (nutrient.required) {
+                    process.exit(1);
+                }
+                continue
+            }
+
+            // By default we use perServing, it is more precise.
+            // However, we found a situation where a nutrient only had
+            // a perServingDisplay value but not a perServing value,
+            // so defaulting if necessary.
+            let amount = wfNutrient.perServing || wfNutrient.perServingDisplay;
+
+            // If the whole foods nutrient uses a different unit of
+            // measure, verify that it's a known uom, and convert it
+            // if required.
+            if (wfNutrient.uom !== nutrient.unit) {
+
+                if (_.has(nutrient, 'alternative_unit')) {
+                    console.error('ERROR: The Whole Foods nutrient\'s unit of measure is unknown: ' + nutrient.name + '/' + wfNutrient.uom)
+                    process.exit(1)
+                } else if (wfNutrient.uom !== nutrient.alternate_unit.unit) {
+                    console.error('ERROR: The Whole Foods nutrient\'s unit of measure is unknown: ' + nutrient.name + '/' + wfNutrient.uom)
+                    process.exit(1)
+                }
+
+                if (nutrient.alternate_unit.conversion_factor) {
+                    console.log('Converting ' + nutrient.name + ': ' + amount + ' * ' + nutrient.alternate_unit.conversion_factor);
+                    amount = amount * nutrient.alternate_unit.conversion_factor
+                    p(amount);
+                }
+            }
+
+            data.push({ name: nutrient.name, value: amount })
+        }
+
+
+        // Add netcarbs to the macro nutrients
+        p4(data)
+        let carbs = _.find(data, { name: 'carbohydrates' });
+        let fiber = _.find(data, { name: 'fiber' });
+        if (carbs) {
+            data.push({ name: "netCarbs", value: carbs.value - fiber.value })
+        }
+
+
+        p4(_.map(wf.nutritionElements, item => _.pick(item, [ 'key', 'uom', 'perServing', 'perServingDisplay' ])));
+        serialize(data)
+        console.log()
     }
 }
 
 
-function parseServingSize(keyword) {
-    let value;
-    while (!lookingAtKeyword()) {
-        if (!value) {
-            value = getToken();
-            continue;
-        }
-        value += ' ' + getToken();
+function mapCategory(category) {
+    category = category.replace(/u0026/g, '&')
+    return category
+}
+
+
+function mapName(name) {
+    name = name.replace(/u0026/g, '&')
+    return name
+}
+
+
+function mapBrand(brand) {
+    if (brand == '365 BY WFM') return 'Whole Foods 365'
+    if (brand == '365 Everyday Value®') return 'Whole Foods 365'
+    if (brand == 'PRODUCE') return 'Whole Foods 365'
+    if (brand == '365 by Whole Foods Market') return 'Whole Foods 365'
+    if (brand == 'Whole Foods Market') return 'Whole Foods 365'
+    if (brand == 'BHU FOODS') return 'Bhu Foods'
+    if (brand == 'siggi\'s') return 'Siggi\'s'
+    brand = brand.replace(/u0026/g, '&')
+    return brand
+}
+
+
+function serialize(data) {
+    p(data)
+
+    y(data, 'name', '', '- ')
+    y(data, 'brand')
+    y(data, 'fullName')
+    y(data, 'url')
+    y(data, 'totalCost')
+    y(data, 'totalGrams')
+    y(data, 'category')
+    y(data, 'ingredients')
+    y(data, 'allergens')
+
+    y(data, 'consumptionUnit')
+    y(data, 'consumptionGrams')
+
+    y(data, 'servingSize')
+    y(data, 'calories')
+
+    y(data, 'fat')
+    y(data, 'saturatedFat')
+    y(data, 'transFat')
+    y(data, 'polyunsaturatedFat')
+    y(data, 'monounsaturatedFat')
+
+    y(data, 'cholesterol')
+    y(data, 'sodium')
+
+    y(data, 'carbohydrates')
+    y(data, 'fiber')
+    y(data, 'sugar')
+    y(data, 'addedSugar')
+    y(data, 'sugarAlcohool')
+    y(data, 'netCarbs')
+
+    y(data, 'protein')
+
+    y(data, 'omega3')
+    y(data, 'zinc')
+    y(data, 'vitaminK')
+    y(data, 'vitaminE')
+    y(data, 'vitaminD')
+    y(data, 'vitaminC')
+    y(data, 'vitaminB6')
+    y(data, 'vitaminB12')
+    y(data, 'vitaminA')
+    y(data, 'thiamin')
+    y(data, 'selenium')
+    y(data, 'riboflavin')
+    y(data, 'potassium')
+    y(data, 'phosphorus')
+    y(data, 'pantothenicAcid')
+    y(data, 'niacin')
+    y(data, 'manganese')
+    y(data, 'magnesium')
+    y(data, 'iron')
+    y(data, 'folicAcid')
+    y(data, 'folate')
+    y(data, 'copper')
+    y(data, 'calcium')
+}
+
+
+function y(list, name) {
+    let prefix = '  ';
+    let stanza = _.find(list, { name: name })
+    if (!stanza) {
+        console.log(prefix + name + ': ' + 0);
+        return;
     }
 
-    console.log(keyword + ': ' + value);
-    let property = snakeCase(keyword);
-    nutrients[property] = value;
-}
-
-
-function parseValue(keyword) {
-    let value = getToken();
-    let metadata = keywords[keyword];
-    let property = snakeCase(keyword);
-
-    if (metadata.units) {
-        let unit;
-        for (let validUnit of metadata.units) {
-            if (value.endsWith(validUnit)) {
-                unit = value.substring(value.length - validUnit.length);
-                value = value.substring(0, value.length - validUnit.length);
-                break;
-            }
+    if (Array.isArray(stanza.value)) {
+        console.log(prefix + name + ':')
+        for (let item of stanza.value) {
+            console.log(prefix + "- " + item)
         }
-
-        if (!unit) {
-            console.error('ERROR: Unexpected units (expected ' + metadata.units[0] + '): ' + keyword + ': ' + value + ' ' + unit);
-            process.exit(1);
-        }
-
-        if (metadata.conversion_factor && unit !== 'IU') {
-            value = parseFloat(value) * metadata.conversion_factor;
-        }
+        return
     }
 
-    nutrients[property] = value;
-    console.log(keyword + ': ' + value);
-}
-
-
-function lookingAtKeyword() {
-    // console.log('Looking at? ' + getPeek(1) + ' ' + getPeek(2) + ' ' + getPeek(3));
-    for (let keyword of Object.keys(keywords)) {
-        let keywordTokens = keyword.split(' ');
-        switch (keywordTokens.length) {
-        case 1:
-            if (getPeek(1) !== keywordTokens[0]) {
-                continue;
-            }
-            return true;
-        case 2:
-            if (getPeek(1) !== keywordTokens[0]) {
-                continue;
-            }
-            if (getPeek(2) !== keywordTokens[1]) {
-                continue;
-            }
-            return true;
-        case 3:
-            if (getPeek(1) !== keywordTokens[0]) {
-                continue;
-            }
-            if (getPeek(2) !== keywordTokens[1]) {
-                continue;
-            }
-            if (getPeek(3) !== keywordTokens[2]) {
-                continue;
-            }
-            return true;
-        }
-    }
-}
-
-
-function getKeyword() {
-    let token = getToken();
-    // console.log(token);
-    for (let keyword of Object.keys(keywords)) {
-        let keywordTokens = keyword.split(' ');
-        // console.log(keywordTokens);
-        switch (keywordTokens.length) {
-        case 1:
-            if (token !== keywordTokens[0]) {
-                continue;
-            }
-            return keyword;
-        case 2:
-            if (token !== keywordTokens[0]) {
-                continue;
-            }
-            if (getPeek(1) !== keywordTokens[1]) {
-                continue;
-            }
-            getToken();
-            return keyword;
-        case 3:
-            if (token !== keywordTokens[0]) {
-                continue;
-            }
-            if (getPeek(1) !== keywordTokens[1]) {
-                continue;
-            }
-            if (getPeek(2) !== keywordTokens[2]) {
-                continue;
-            }
-            getToken();
-            getToken();
-            return keyword;
-        }
-    }
-}
-
-
-function parse() {
-    for (let line of fs.readFileSync('./wf', 'utf-8').split(/\r?\n/)) {
-        if (line === '') {
-            continue;
-        }
-        for (let word of line.split(' ')) {
-            tokens.push(word);
-        }
-    }
-    currentTokenNumber = -1;
-    console.log(tokens);
-}
-
-
-function getToken() {
-    if (currentTokenNumber > tokens.length) {
-        return -1;
-    }
-
-    currentTokenNumber++;
-    return tokens[currentTokenNumber];
-}
-
-
-function getPeek(n) {
-    return tokens[currentTokenNumber + n];
-}
-
-
-function finalize() {
-    // nutrients.netcarbs = parseInt(nutrients.carbohydrates) - parseInt(nutrients.fiber) - parseInt(nutrients.sugar_alcohol);
-    console.log(JSON.stringify(nutrients, null, 4));
-    print();
-    process.exit(1);
-}
-
-function print() {
-    let DELIM = '|';
-    process.stdout.write('=split("');
-
-    process.stdout.write((nutrients.serving_size || 0) + DELIM)
-    process.stdout.write((nutrients.calories || 0) + DELIM)
-    process.stdout.write((nutrients.total_fat || 0) + DELIM)
-    process.stdout.write((nutrients.saturated_fat || 0) + DELIM)
-    process.stdout.write((nutrients.trans_fat || 0) + DELIM)
-    process.stdout.write((nutrients.polyunsaturated_fat || 0) + DELIM)
-    process.stdout.write((nutrients.monounsaturated_fat || 0) + DELIM)
-    process.stdout.write((nutrients.cholesterol || 0) + DELIM)
-    process.stdout.write((nutrients.sodium || 0) + DELIM)
-    process.stdout.write((nutrients.total_carbohydrates || 0) + DELIM)
-    process.stdout.write((nutrients.dietary_fiber || 0) + DELIM)
-    process.stdout.write((nutrients.sugars || 0) + DELIM)
-    process.stdout.write((nutrients.sugars_added || 0) + DELIM)
-    process.stdout.write((nutrients.sugars_alcohol || 0) + DELIM)
-
-    process.stdout.write('0' + DELIM)
-    // process.stdout.write("=indirect(concat('Z', ROW())) - indirect(concat('AA', ROW())) - indirect(concat('AD', ROW()))" + DELIM);
-
-    process.stdout.write((nutrients.protein || 0) + DELIM)
-
-    process.stdout.write((nutrients.omega_3 || 0) + DELIM)
-
-    process.stdout.write((nutrients.vitamin_d || 0) + DELIM)
-    process.stdout.write((nutrients.calcium || 0) + DELIM)
-    process.stdout.write((nutrients.iron || 0) + DELIM)
-    process.stdout.write((nutrients.potassium || 0) + DELIM)
-
-    process.stdout.write('0' + DELIM)
-    process.stdout.write('0' + DELIM)
-    // process.stdout.write("'=indirect(concat(CHAR(34)&N&CHAR(34), ROW()))" + DELIM);
-    // process.stdout.write('=indirect(concat("Q", ROW()))' + DELIM);
-
-    process.stdout.write((nutrients.vitamin_a || 0) + DELIM)
-    process.stdout.write((nutrients.vitamin_c || 0) + DELIM)
-    process.stdout.write((nutrients.vitamin_e || 0) + DELIM)
-    process.stdout.write((nutrients.vitamin_k || 0) + DELIM)
-    process.stdout.write((nutrients.thiamin || 0) + DELIM)
-    process.stdout.write((nutrients.riboflavin || 0) + DELIM)
-    process.stdout.write((nutrients.niacin || 0) + DELIM)
-    process.stdout.write((nutrients.vitamin_b6 || 0) + DELIM)
-    process.stdout.write((nutrients.folate || 0) + DELIM)
-    // process.stdout.write((nutrients.folic_acid || 0) + DELIM)
-    process.stdout.write((nutrients.vitamin_b12 || 0) + DELIM)
-    process.stdout.write((nutrients.pantothenic_acid || 0) + DELIM)
-    process.stdout.write((nutrients.phosphorus || 0) + DELIM)
-    process.stdout.write((nutrients.magnesium || 0) + DELIM)
-    process.stdout.write((nutrients.zinc || 0) + DELIM)
-    process.stdout.write((nutrients.selenium || 0) + DELIM)
-    process.stdout.write((nutrients.copper || 0) + DELIM)
-    process.stdout.write(nutrients.manganese || 0);
-
-    process.stdout.write('", "' + DELIM + '"\)');
-    console.log();
+    console.log(prefix + name + ': ' + stanza.value);
 }
